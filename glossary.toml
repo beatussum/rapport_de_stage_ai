@@ -1,0 +1,20 @@
+[crate]
+short = "crate"
+description = "La plus petite unité de code compilable en Rust. Par extension, ce terme désigne une bibliothèque dans ce langage."
+
+[leetcode]
+short = "LeetCode"
+description = "https://leetcode.com/ -- Une plateforme contenant différents problèmes algorithmiques qui est souvent utilisée pour les entretiens techniques."
+
+[lig]
+short = "LIG"
+long = "Laboratoire d'Informatique de Grenoble"
+description = "Un laboratoire de recherche français en informatique, créé le 1#super[er] janvier 2007."
+
+[petgraph]
+short = "Petgraph"
+description = "Une bibilothèque, très connue de l'écosystème Rust, permettant la création et la gestion de graphes."
+
+[rayon]
+short = "Rayon"
+description = "Une bibliothèque de parallélisme de donnée pour Rust."
