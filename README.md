@@ -4,7 +4,7 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/beatussum/rapport_de_stage_ai)
 ![GitHub Actions Workflow status](https://img.shields.io/github/actions/workflow/status/beatussum/rapport_de_stage_ai/compile.yml)
 
-Ce dépôt GitHub contient les sources de mon rapport de Stage Assistant Ingénieur, écrit au format [Typst](https://typst.app/).
+Ce dépôt GitHub contient les sources de mon rapport de Stage Assistant Ingénieur, écrit au [format Typst](https://typst.app/).
 
 ## Licences
 
