@@ -2,28 +2,29 @@
 
 #show: ensimag.with(
   logos: (
-    company: rect([MON ENTREPRISE]),
-    ensimag: rect([ENSIMAG]),
+    company: image("logos/inria_logo.svg", height: 1fr),
+    ensimag: image("logos/ensimag_logo.png", height: 1fr),
   ),
-  title: [A Typesetting System to Untangle the Scientific Writing Process],
+  title: [Algorithmes parallèles de graphe avec Rayon],
   author: (
-    name: "Martin Haug",
-    year: [3#super[e] année],
+    name: "Mattéo Rossillol‑‑Laruelle",
+    year: [2#super[e] année],
     option: [ISI],
   ),
   period: (
-    begin: datetime(year: 1970, month: 01, day: 01),
-    end: datetime(year: 1970, month: 03, day: 01),
+    begin: datetime(year: 2025, month: 05, day: 26),
+    end: datetime(year: 2025, month: 07, day: 31),
   ),
+  date-fmt: "[day] [month repr:long] [year]",
   company: (
-    name: [mon entreprise],
+    name: [Centre Inria de l'Université Grenoble Alpes],
     address: [
-      1 cours Jean Jaurès \
-      38000 Grenoble
+      655 Avenue de l’Europe \
+      38330 Montbonnot-Saint-Martin
     ]
   ),
-  internship-tutor: [Charles Dupond],
-  school-tutor: [Charles Dupont],
+  internship-tutor: [Frédéric Wagner],
+  school-tutor: [Gaelle Calvary],
   abstract: [
     The process of scientific writing is often tangled up with the intricacies of typesetting, leading to frustration and wasted time for researchers. In this paper, we introduce Typst, a new typesetting system designed specifically for scientific writing. Typst untangles the typesetting process, allowing researchers to compose papers faster. In a series of experiments we demonstrate that Typst offers several advantages, including faster document creation, simplified syntax, and increased ease-of-use.
   ],
