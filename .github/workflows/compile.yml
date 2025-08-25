@@ -1,0 +1,54 @@
+name: Compile report
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  compile:
+    name: Compile report
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        just-version:
+          - null
+          - 1.40.0
+
+        typst-version:
+          - null
+          - 0.13.1
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup just
+        uses: extractions/setup-just@v3
+        with:
+          just-version: ${{ matrix.just-version }}
+
+      - name: Install TeX Gyre fonts
+        run: sudo apt-get install -qy fonts-texgyre
+
+      - name: Setup typst
+        id: setup-typst
+        uses: typst-community/setup-typst@v4
+        with:
+          typst-version: ${{ matrix.typst-version }}
+
+      - name: Compile report
+        run: just compile
+
+      - name: Archive compiled report
+        uses: actions/upload-artifact@v4
+        if: matrix.just-version == null && matrix.typst-version == null
+        with:
+          name: report
+          path: main.pdf
+          retention-days: 5
