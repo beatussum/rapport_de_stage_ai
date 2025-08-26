@@ -16,7 +16,7 @@ die()
 main()
 {
 	if [[ ! -d "${OUTPUT_DIR}" ]]; then
-		mkdir"${OUTPUT_DIR}" || die "Cannot create the output directory"
+		mkdir "${OUTPUT_DIR}" || die "Cannot create the output directory"
 	fi
 
 	wget \
