@@ -49,6 +49,70 @@
   figure-supplement: [Fig.],
 )
 
+= Avant-propos
+
+= Introduction
+
+== Rust et parallèlisme
+
+=== Rust, un langage concurent
+
+=== @rayon
+
+== Algorithmes de graphe
+
+=== Problème du plus court chemin
+
+=== Recherche d'existence de chemin
+
+== Solution développée
+
+= Cas pratique
+
+== Présentation du problème
+
+=== Pertinence
+
+== Solutions séquentielles
+
+=== Parcours en profondeur
+
+=== Implémentation itérative
+
+=== Implémentation récursive
+
+= Parallélisation
+
+== Problématiques
+
+=== La collection associative
+
+== Implémentation des solutions
+
+=== Parcours en largeur
+
+=== Implémentation itérative
+
+=== Itérateur parallèle
+
+= Analyse des résultats
+
+== Mesure de l'efficacité
+
+== Limites du parallélisme
+
+= Généricité
+
+== Une @crate autonome
+
+== Une meilleure implémentation
+
+= Synthèse générale
+
+== Bilan personnel
+
+== Conclusion technique
+
 = Remerciements
 
 Je remercie, tout d'abord, M. F. Wagner pour m'avoir accepté en temps que stagiaire au sein de l'équipe Datamove, ainsi que pour son aimable aide tout au long de mon séjour au @lig.
