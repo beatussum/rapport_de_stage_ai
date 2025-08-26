@@ -51,6 +51,42 @@
 
 = Avant-propos
 
+== Contexte
+
+Ce stage s'est tenu au sein de l'équipe @datamove au @lig.
+
+Le @lig est un laboratoire de recherche qui, malgré son nom, se situe à Saint-Martin-d'Hères.
+Il s'agit d'un établissement public dont la direction est partagée entre l'@uga, l'@inria et le @cnrs.
+Ce laboratoire a été fondé en 2007 avec la mission d'accroître l'efficacité de la recherche en informatique : en effet, le regroupement de plusieurs équipes de spécialisation diverse vise à augmenter les collaborations transversales et le développement de projets interdisciplinaires. @bib:lig
+
+Parmis les équipes du @lig, @datamove a pour sujet d'étude #quote[le mouvement de données pour le calcul haute performance].
+En effet, pour les supercalculateurs, la bonne gestion du mouvement de donnée est un enjeu de taille : celui-ci représente, dans les faits, l'une des premières causes de ralentissement.
+L'équipe divise son travail en quatre axes de recherche majeurs :
+- l'intégration de l'analyse de données et du calcul intensif,
+- l'ordonnancement par lot (#emph[batch]) prenant en compte les mouvements de données,
+- l'étude empirique de plateformes à grande échelle, et
+- la prediction de la disponibilité des ressources. @bib:datamove
+
+== Intérêt de l'objet du stage
+
+D'une part, une multitude de problèmes se résolvent à l'aide d'algorithmes sur des graphes : recherche d'existence de chemin, de plus court chemin ou @sssp, etc..
+
+D'autre part, depuis les alentours des années 2000, les @moore, qui prédisaient l'augmentation constante de la puissance de calcul des processeurs, ne sont plus vérifiées.
+En effet, les fabricants commencent depuis quelques années à atteindre les limites physiques.
+De cette façon, l'augmentation des performances d'un algorithme ne vient plus, de nos jours, de l'utilisation d'un processeur ayant une fréquence d'horloge plus élevée, mais de la capacité à exploiter aux mieux ses unités de calcul : en d'autres termes, l'enjeu principal est devenu la parallélisation. @bib:sutter 
+
+Ansi, bien que de nombreux algorithmes séquentiels existent, ceux dont l'éxécution est parallélisable sont devenus particulièrement intéressants.
+
+== Mission
+
+Au cours des lignes suivantes, on décrira deux algorithmes parallèles :
+- recherche de chemin, et
+- recherche de plus court chemin (ou @sssp).
+
+On étudiera ensuite les limites de la parallèlisation.
+
+Enfin, on fournira une interface générique à ces algorithmes.
+
 = Introduction
 
 == Rust et parallèlisme
@@ -115,7 +151,7 @@
 
 = Remerciements
 
-Je remercie, tout d'abord, M. F. Wagner pour m'avoir accepté en temps que stagiaire au sein de l'équipe Datamove, ainsi que pour son aimable aide tout au long de mon séjour au @lig.
+Je remercie, tout d'abord, M. F. Wagner pour m'avoir accepté en temps que stagiaire au sein de l'équipe @datamove, ainsi que pour son aimable aide tout au long de mon séjour au @lig.
 
 Je tiens également à féliciter mes collègues qui ont pu occasionnellement m'aider au cours de ce stage : en particulier, je salue M. P. Kailer et M. V. Trophime pour leur assistance en Rust.
 

@@ -1,6 +1,20 @@
+[cnrs]
+short = "C.N.R.S."
+long = "Centre National de la Recherche Scientifique"
+description = "Principal organisme public français de recherche."
+
 [crate]
 short = "crate"
 description = "La plus petite unité de code compilable en Rust. Par extension, ce terme désigne une bibliothèque dans ce langage."
+
+[datamove]
+short = "DATAMOVE"
+description = "Une équipe de recherche spécialisée dans le mouvement de données pour le calcul haute performance."
+
+[inria]
+short = "Inria"
+long = "Institut National de Recherche en Informatique et en Automatique"
+description = "Principal organisme public français de recherche en informatique."
 
 [leetcode]
 short = "LeetCode"
@@ -11,6 +25,10 @@ short = "LIG"
 long = "Laboratoire d'Informatique de Grenoble"
 description = "Un laboratoire de recherche français en informatique, créé le 1#super[er] janvier 2007."
 
+[moore]
+short = "lois de Moore"
+description = "Ensemble de lois empiriques qui prédisent l'évolution de la puissance de calcul des processeurs."
+
 [petgraph]
 short = "Petgraph"
 description = "Une bibilothèque, très connue de l'écosystème Rust, permettant la création et la gestion de graphes."
@@ -18,3 +36,13 @@ description = "Une bibilothèque, très connue de l'écosystème Rust, permettan
 [rayon]
 short = "Rayon"
 description = "Une bibliothèque de parallélisme de donnée pour Rust."
+
+[sssp]
+short = "SSSP"
+long = "Single-Source Shortest Paths"
+description = "Le plus court chemin depuis un sommet donné."
+
+[uga]
+short = "U.G.A."
+long = "Université Grenoble-Alpes"
+description = "Principal établissement de l'enseignement supérieur de la métropole grenobloise."
