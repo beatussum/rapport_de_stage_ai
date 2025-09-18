@@ -1,3 +1,19 @@
+@book{bib:cormen,
+	author = {Cormen, Thomas H. and Leiserson, Charles E. and Rivest, Ronald L. and Stein, Clifford},
+	edition = {3},
+	editor = {Dunod},
+	isbn = {978-2-10-054526-1},
+	language = {french},
+	origlanguage = {english},
+	origtitle = {Introduction to Algorithms},
+	publisher = {MIT press},
+	title = {Algorithmique},
+	translator = {Cazin, Xavier and Kocher, Georges-Louis},
+	url = {https://mitpress.mit.edu/9780262046305/introduction-to-algorithms/},
+	urldate = {2025-09-18},
+	year = {2023},
+}
+
 @online{bib:datamove,
 	date = {2025-01-16},
 	institution = {Laboratoire d'Informatique de Grenoble},
@@ -7,6 +23,63 @@
 	title = {DATAMOVE - Mouvement de données pour le calcul haute performance},
 	url = {https://www.liglab.fr/fr/recherche/equipes-recherche/datamove},
 	urldate = {2025-08-26},
+}
+
+@article{bib:delta-stepping,
+	title = {Δ-stepping: a parallelizable shortest path algorithm},
+	journal = {Journal of Algorithms},
+	volume = {49},
+	number = {1},
+	pages = {114-152},
+	year = {2003},
+	note = {1998 European Symposium on Algorithms},
+	issn = {0196-6774},
+	doi = {https://doi.org/10.1016/S0196-6774(03)00076-2},
+	url = {https://www.sciencedirect.com/science/article/pii/S0196677403000762},
+	author = {U. Meyer and P. Sanders},
+	abstract = {The single source shortest path problem for arbitrary directed graphs with n nodes, m edges and nonnegative edge weights can sequentially be solved using O(n·logn+m) operations. However, no work-efficient parallel algorithm is known that runs in sublinear time for arbitrary graphs. In this paper we present a rather simple algorithm for the single source shortest path problem. Our new algorithm, which we call Delta-stepping, can be implemented very efficiently in sequential and parallel setting for a large class of graphs. For random edge weights and arbitrary graphs with maximum node degree d, sequential Δ-stepping needs O(n+m+d·L) total average-case time, where L denotes the maximum shortest path weight from the source node s to any node reachable from s. For example, this means linear time on directed graphs with constant maximum degree. Our best parallel version for a PRAM takes O(d·L·logn+log2n) time and O(n+m+d·L·logn) work on average. For random graphs, even O(log2n) time and O(n+m) work on average can be achieved. We also discuss how the algorithm can be adapted to work with nonrandom edge weights and how it can be implemented on distributed memory machines. Experiments indicate that already a simple implementation of the algorithm achieves significant speedup on real machines.},
+}
+
+@article{bib:dijkstra,
+	author = {Dijkstra, E. W.},
+	title = {A note on two problems in connexion with graphs},
+	year = {1959},
+	issue_date = {December  1959},
+	publisher = {Springer-Verlag},
+	address = {Berlin, Heidelberg},
+	volume = {1},
+	number = {1},
+	issn = {0029-599X},
+	url = {https://doi.org/10.1007/BF01386390},
+	doi = {10.1007/BF01386390},
+	journal = {Numer. Math.},
+	month = {12},
+	pages = {269–271},
+	numpages = {3},
+}
+
+@online{bib:frog-jump,
+	language = {english},
+	organization = {LeetCode},
+	title = {Frog Jump - LeetCode},
+	url = {https://leetcode.com/problems/frog-jump/},
+	urldate = {2025-09-18},
+}
+
+@inproceedings{bib:hal-00471255,
+	title = {Random graph generation for scheduling simulations},
+	author = {Cordeiro and Daniel and Mounié and Grégory and Pérarnau and Swann and Trystram and Denis and Vincent and Jean-Marc and Wagner and Frédéric},
+	url = {https://hal.science/hal-00471255},
+	booktitle = {Proceedings of 3rd International ICST Conference on Simulation Tools and Techniques (SIMUTools 2010)},
+	address = {Malaga, Spain},
+	publisher = {ICST},
+	pages = {10},
+	year = {2010},
+	month = {03},
+	keywords = {random graph generation and direct acyclic graph and scheduling and toolkit},
+	pdf = {https://hal.science/hal-00471255v2/file/ggen.pdf},
+	hal_id = {hal-00471255},
+	hal_version = {v2},
 }
 
 @online{bib:lig,
@@ -20,6 +93,19 @@
 	urldate = {2025-08-26},
 }
 
+@manual{bib:rayon,
+	abstract = {Rayon is a data-parallelism library that makes it easy to convert sequential computations into parallel.},
+	author = {Matsakis, Niko and Stone, Josh},
+	edition = {2024},
+	language = {english},
+	library = {rayon},
+	organization = {rayon-rs},
+	title = {rayon - Rust},
+	url = {https://docs.rs/rayon/latest/rayon/},
+	urldate = {2025-09-18},
+	year = {2025},
+}
+
 @article{bib:sutter,
 	title = {The free lunch is over: A fundamental turn toward concurrency in software},
 	author = {Sutter, Herb and others},
@@ -28,4 +114,24 @@
 	number = {3},
 	pages = {202--210},
 	year = {2005}
+}
+
+@book{bib:the-rust-programming-language,
+	title = {The Rust programming language},
+	author = {Klabnik, Steve and Nichols, Carol},
+	year = {2023},
+	publisher = {No Starch Press},
+}
+
+@manual{bib:the-rust-standard-library,
+	abstract = {The Rust Standard Library is the foundation of portable Rust software, a set of minimal and battle-tested shared abstractions for the broader Rust ecosystem. It offers core types, like Vec<T> and Option<T>, library-defined operations on language primitives, standard macros, I/O and multithreading, among many other things.},
+	author = {The Rust Foundation},
+	edition = {2024},
+	language = {english},
+	library = {std},
+	organization = {The Rust Foundation},
+	title = {The Rust Standard Library},
+	url = {https://doc.rust-lang.org/stable/std/},
+	urldate = {2025-09-17},
+	year = {2025},
 }

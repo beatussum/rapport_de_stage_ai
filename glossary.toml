@@ -1,18 +1,42 @@
+[borrow-checker]
+short = "borrow checker"
+group = "Rust"
+description = "Un sous-programme, partie intégrante du compilateur Rust, qui assure la sécurité de la mémoire en imposant des règles sur l'utilisation des références."
+
 [cnrs]
 short = "C.N.R.S."
+group = "Structure d'accueil"
 long = "Centre National de la Recherche Scientifique"
 description = "Principal organisme public français de recherche."
 
 [crate]
 short = "crate"
+group = "Rust"
 description = "La plus petite unité de code compilable en Rust. Par extension, ce terme désigne une bibliothèque dans ce langage."
 
 [datamove]
 short = "DATAMOVE"
+group = "Structure d'accueil"
 description = "Une équipe de recherche spécialisée dans le mouvement de données pour le calcul haute performance."
+
+[data-race]
+short = "data race"
+group = "Généralités sur la concurrence"
+description = "Événement qui survient en programmation concurrente lorsque deux threads ou plus accèdent simultanément à une même variable partagée. Cet événement est souvent synonyme de bogue."
+
+[divide-and-conquer]
+short = "diviser pour régner"
+group = "Généralités sur la concurrence"
+description = "Technique algorithmique consistant à diviser le travail à effectuer en plusieurs sous-tâches (diviser), à résoudre récursivement ces sous-problèmes (régner) et à combiner, encore de manière récursive, les solutions obtenues pour former la solution du problème global."
+
+[fil]
+short = "fil"
+group = "Généralités sur la concurrence"
+description = "Un fil (ou #emph[thread] en anglais) est la plus petite succession d'instruction que l'ordonnanceur du système d'exploitation peut gérer."
 
 [inria]
 short = "Inria"
+group = "Structure d'accueil"
 long = "Institut National de Recherche en Informatique et en Automatique"
 description = "Principal organisme public français de recherche en informatique."
 
@@ -22,8 +46,14 @@ description = "https://leetcode.com/ -- Une plateforme contenant différents pro
 
 [lig]
 short = "LIG"
+group = "Structure d'accueil"
 long = "Laboratoire d'Informatique de Grenoble"
 description = "Un laboratoire de recherche français en informatique, créé le 1#super[er] janvier 2007."
+
+[marqueur]
+short = "marqueur"
+group = "Rust"
+description = "Par convention, il s'agit d'un @trait dont le corps est vide et dont l'objectif est d'annoter un type comme ayant une propriété particulière."
 
 [moore]
 short = "lois de Moore"
@@ -31,10 +61,12 @@ description = "Ensemble de lois empiriques qui prédisent l'évolution de la pui
 
 [petgraph]
 short = "Petgraph"
+group = "Rust"
 description = "Une bibilothèque, très connue de l'écosystème Rust, permettant la création et la gestion de graphes."
 
 [rayon]
 short = "Rayon"
+group = "Rust"
 description = "Une bibliothèque de parallélisme de donnée pour Rust."
 
 [sssp]
@@ -42,7 +74,18 @@ short = "SSSP"
 long = "Single-Source Shortest Paths"
 description = "Le plus court chemin depuis un sommet donné."
 
+[trait]
+short = "trait"
+group = "Rust"
+description = "Il s'agit d'une entité permettant de définir un ensemble de fonctionnalités qu'un type possède et a en commun avec d'autres."
+
 [uga]
 short = "U.G.A."
 long = "Université Grenoble-Alpes"
+group = "Structure d'accueil"
 description = "Principal établissement de l'enseignement supérieur de la métropole grenobloise."
+
+[work-stealing]
+short = "vol de travail"
+group = "Généralités sur la concurrence"
+description = "Le vol de travail est une méthode d'ordonnancement où chaque processeur dispose d'une pile des tâches à effectuer. Si un des processus parvient à vider sa pile avant les autres, il #emph[vole] le travail des autres."
