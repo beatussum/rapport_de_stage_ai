@@ -9,7 +9,16 @@
 #show: init-glossary.with(toml("glossary.toml"), show-term: emph)
 #show: codly-init.with()
 
-#codly(languages: codly-languages, lang-inset: 2pt)
+#show figure.where(kind: raw): fig => {
+  set text(size: 0.798em)
+  fig
+}
+
+#codly(
+  highlighted-default-color: orange.lighten(80%),
+  languages: codly-languages,
+  lang-outset: (x: 0.32em, y: 0.32em),
+)
 
 #show: ensimag.with(
   logos: (
@@ -359,19 +368,315 @@ Il existe deux algorithmes principaux de parcours de graphe :
 
 Au cours de cette étude, on s'intéressera au parcours en profondeur.
 
+De cette façon, il a été possible d'explorer la notion de programmation concurrente et les raisons qui rendent le Rust un langage adéquat à ce type de programmation, enfin, on a pu succinctement présenter les deux algorithmes que l'on étudiera dans ce papier.
+
 = Cas pratique
+
+Dans un premier temps, on s'intéressera à un petit problème d'informatique faisant intervenir un algorithme sur graphe que l'on cherchera, dans les sections ultérieures, à optimiser au maximum en faisant l'usage notamment de travail parallèle.
+
+@leetcode est une plateforme de problèmes d'informatique en ligne.
+Celle-ci est souvent utilisé lors des @technical-interview:pl.
+On étudiera ici un problème qui provient de cette plateforme.
+
+Après une présentation exhaustive du problème, on étudiera les différentes solutions séquentielles développées.
 
 == Présentation du problème
 
+#emph[Frog jump] est un problème @leetcode avec le niveau de difficulté #emph[hard], le plus élevée de la plateforme.
+Ses étiquettes sont #emph[tableau] et #emph[programmation dynamique]. @bib:frog-jump <ref:frog-jump-intro>
+
+#quote(block: true)[
+  Une grenouille traverse la rivière.
+  La rivière est divisée en un certain nombre d'unités et, pour chaque unité, une pierre peut être présente.
+  Les caractéristiques de la rivière sont données en entrée.
+  La grenouille ne peut que sauter aux endroits où une pierre est présente.
+
+  La grenouille, en partant de la première pierre, doit sauter de pierre pour atteindre l'autre rive qui correspond à la dernière position où se trouve également une pierre.
+
+  La taille du saut de la grenouille est égale à sa vitesse $v_k in NN^*$ où $k in NN$ correspond à l'indice du saut.
+
+  À chaque saut, la grenouille ayant une vitesse $v_k$ peut ralentir tel que $v_(k + 1) = max(1, v_k - 1)$, conserver sa vitesse tel que $v_(k + 1) = v_k$ ou accélerer de $v_(k + 1) = min(n - p - 1, v_k + 1)$ où $n >= 2$ est le nombre d'unités et $p in [|0 ; n - 1|]$ la position actuelle de la grenouille.
+]
+
+On peut se questionner sur la pertinence du choix de ce problème en particulier.
+Pour bien comprendre en quoi celui-ci est intéressant, on va détailler ce qui fait de lui un bon sujet d'étude.
+
 === Pertinence
+
+Pour commencer, on proposera un modèle mathématique pour représenter le problème.
+
+On pose $(frak(P)_k)_k in {top, bot}^NN$ tel que, pour tout $k in NN$,
+
+$
+  frak(P)_k = cases(
+    top "s'il y a une pierre à la position" k,
+    bot "sinon"
+  )
+$
+
+On pose l'espace d'état $S = [|0, n - 1|] times [|1, n|]$.
+
+On pose $phi : S -> {top, bot}$ défini par induction pour tout $(p, v) in S$ et $k in {-1, 0, 1}$,
+
+$
+  phi (p, v) = cases(
+    top "si" p = n - 1,
+    bot "si" not frak(P)_p,
+    or_(k in {-1, 0, 1}) phi_k (p + v + k, v + k) "sinon",
+  )
+$
+
+Comme décrit dans l'#link(<ref:frog-jump-intro>)[énoncé du problème], on remarque qu'il s'agit d'un problème de programmation dynamique.
+On peut ainsi se ramener à un graphe.
+
+On pose
+
+$
+  V &= { (p, v) in S | frak(P)_p } \
+  E &= { (a, b) in V^2 | exists k in {-1, 0, 1}, b = a + (k, k) }
+$
+
+$G = (V, E)$ est donc le graphe orienté représentatif du problème.
+
+Ainsi, la résolution du problème se résume à montrer l'existence d'un chemin entre le sommet $(0, 1)$ et un des sommets $(n - 1, v)$ où $v in [|1, n|]$.
+
+Pour cette raison, ce problème est tout à fait pertinent dans le cadre de l'étude décrite dans ce document dont l'objectif est, entre autres, déterminer un algorithme parallèle de recherche d'existence de chemin.
+
+Maintenant que l'intérêt de ce problème a été établi, on s'intéresse dorénavant à sa résolution séquentielle.
 
 == Solutions séquentielles
 
+On propose trois solutions séquentielles différentes :
+- la première implémente un parcours en profondeur du graphe,
+- la seconde itère sur l'espace d'états,
+- la dernière suit la première formulation mathématique du problème avec une implémentation récursive.
+
+On étudiera les différentes approches en notant leurs avantages et leurs inconvénients.
+
+Au cours des sections suivantes, on notera $T_s (n)$ (resp. $E_s (n)$) la complexité temporelle (resp. spatialle) dans une situation $s in {"meilleur", "pire"}$ et pour un échantillon de donnée de taille $n >= 2$.
+
 === Parcours en profondeur
+
+#codly(
+  annotations: (
+    (
+      start: 15,
+      end: 23,
+      content: block(
+        width: 2em,
+        rotate(-90deg, reflow: true)[Calcul des successeurs],
+      ),
+    ),
+  ),
+  highlights: (
+    (
+      line: 22,
+      start: 19,
+      label: <ref:dfs-algorithm:bin-ops>,
+    ),
+  ),
+)
+
+#figure(
+  ```rust
+  pub fn solve(input: &Input) -> bool {
+    let len = input.len();
+
+    let mut is_visited = HashSet::default();
+    let mut to_visit = vec![input.root];
+
+    while let Some(state @ (p, s)) = to_visit.pop() {
+        if p == len - 1 {
+            return true;
+        } else if is_visited.insert(state) {
+            let small_speed = s - 1;
+            let big_speed = s + 1;
+            let big_position = p + big_speed;
+
+            let next = Some((big_position, big_speed))
+                .into_iter()
+                .chain(
+                    (small_speed > 0).then_some((p + small_speed, small_speed)),
+                )
+                .chain(Some((p + s, s)))
+                .filter(|all @ &(p, _)| {
+                    (p < len) && input.has_stone[p] && !is_visited.contains(all)
+                });
+
+            to_visit.extend(next)
+        }
+    }
+
+    false
+  }
+  ```,
+
+  caption: [Implémentation sous la forme d'un parcours en profondeur],
+  placement: auto,
+  scope: "parent",
+) <ref:dfs-algorithm>
+
+Pour @ref:dfs-algorithm, il s'agit tout d'un parcours en profondeur sur le graphe $G$ défini plus haut, bien que celui-ci soit généré de manière @lazy[paresseuse], en partant du sommet $(p = 0, v = 1)$ et que celui-ci dispose d'un arrêt potentiellement précoce, soit dès que l'on trouve un $v in [|1, n|]$ tel que $(p = n - 1, v = v)$ soit atteint.
+
+En Rust, comme dans de nombreux autres langages de programmation, les opérateurs binaires sont @lazy; ainsi, à la ligne @ref:dfs-algorithm:bin-ops, l'ordre des opérandes est très importante : on procède par coût croissant. De cette façon, on effectue
++ une comparaison sur entier dont le coût est négligeable, puis
++ un accès sur un tableau qui plus coûteux car on a une indirection supplémentaire à traiter, et enfin
++ un accès à la table de hachage étant donné le coût non négligeable de la fonction de hâchage et des coûts internes de la table.
+
+Le meilleur cas correspond à une situation dans laquelle on montre l'existence du chemin en ne parcourant qu'une seule #emph[branche] du graphe ; au contraire, la pire est celle qui oblige le parcours entier de $G$.
+
+On en déduit donc que
+
+$
+  T_"meilleur" (n) &= o(n) \
+  T_"pire" (n) &= \#S \
+  &= \# ([|0, n - 1|] times [|1, n|]) \
+  &= \# [|0, n - 1|] times \# [|1, n|] \
+  &= o(n^2)
+$
+
+Par la même analyse, on conclue que
+
+$
+  E_"meilleur" (n) &= o(n) \
+  E_"pire" &= o(n^2)
+$
 
 === Implémentation itérative
 
+#codly(
+  highlighted-lines: range(19, 27),
+  annotations: (
+    (
+      start: 15,
+      end: 27,
+      content: block(
+        width: 2em,
+        rotate(-90deg, reflow: true)[Boucle sur $(p, v) in S$],
+      ),
+    ),
+  ),
+)
+
+#figure(
+  ```rust
+  pub fn solve(input: &Input) -> bool {
+    let len = input.len();
+
+    let mut is_solvable_with = (0..len)
+        .map(|p| (0..len).map(|_| p == len - 1).collect::<Vec<_>>())
+        .collect::<Vec<_>>();
+
+    input
+        .has_stone
+        .iter()
+        .copied()
+        .enumerate()
+        .rev()
+        .filter_map(|(i, has_stone)| Some(i).filter(|_| has_stone))
+        .for_each(|p| {
+            if let Some((first_position, other_positions)) =
+                is_solvable_with[p..].split_first_mut()
+            {
+                first_position[..len - p]
+                    .iter_mut()
+                    .enumerate()
+                    .skip(1)
+                    .for_each(|(s, is_solvable)| {
+                        *is_solvable = other_positions[s - 1][s]
+                            || other_positions[s][s + 1];
+                    });
+            }
+        });
+
+    is_solvable_with[0][1]
+  }
+  ```,
+
+  caption: [Implémentation itérative],
+  placement: auto,
+  scope: "parent",
+) <ref:iter-algorithm>
+
+Pour @ref:iter-algorithm, on travaille directement sur l'espace d'état $S$.
+
+Le premier appel à ```rust Iterator::for_each``` correspond à la boucle dont le variant est $p in [|0, n - 1|]$ ; le second correspond à celle dont le variant est $v in [|1, n|]$.
+
+On note l'utilisation de ```rust Vec::split_first_mut``` qui nous permet d'écrire dans ```rust is_solvable_with``` à l'indice $(p, v)$ tout en lisant aux indices ${(p + v + k, v + k) | k in {0, 1}}$.
+
+Assez intuitivement, les performances de @ref:iter-algorithm sont très mauvaises comparativement au précédent.
+En effet, cet algorithme reconstruit la totalité de l'ensemble $S$ : on en déduit que $T_"meilleur"$ et $E_"meilleur"$ sont quadratiques.
+
 === Implémentation récursive
+
+#codly(
+  annotations: (
+    (
+      start: 14,
+      end: 21,
+      content: block(
+        width: 2em,
+        rotate(-90deg, reflow: true)[Calcul des successeurs],
+      ),
+    ),
+  ),
+)
+
+#figure(
+  ```rust
+  fn phi(
+      root @ (p, s): State,
+      has_stone: &[bool],
+      is_visited: &mut HashMap<State, bool>,
+  ) -> bool {
+      if !is_visited.contains_key(&root) {
+          let len = has_stone.len();
+
+          let small_speed = s - 1;
+          let big_speed = s + 1;
+          let big_position = p + big_speed;
+
+          let is_solution = (p == len - 1)
+              || Some((p + s, s))
+                  .into_iter()
+                  .chain(
+                      (small_speed > 0)
+                          .then_some((p + small_speed, small_speed)),
+                  )
+                  .chain(Some((big_position, big_speed)))
+                  .filter(|&(p, _)| (p < len) && has_stone[p])
+                  .find(|&root| phi(root, has_stone, is_visited))
+                  .is_some();
+
+          is_visited.insert(root, is_solution);
+      }
+
+      is_visited.get(&root).copied().unwrap_or(false)
+  }
+
+  pub fn solve(input: &Input) -> bool {
+      let mut is_visited = HashMap::default();
+      phi(input.root, &input.has_stone, &mut is_visited)
+  }
+  ```,
+
+  caption: [Implémentation récursive],
+  placement: auto,
+  scope: "parent",
+) <ref:rec-algorithm>
+
+Les performances de @ref:rec-algorithm sont comparables avec @ref:dfs-algorithm.
+En effet le principe de fonctionnement est globalement le même : la récursion avec @memoization effectue un parcours en profondeur (la pile d'exécution joue le rôle de la pile ```rust to_visit``` de @ref:dfs-algorithm).
+
+Pour cette raison, on peut affirmer que $T_s$ et $E_s$, pour $s in {"meilleur", "pire"}$ ont le même ordre de grandeur. Cependant, le coût de l'appel de fonction (passage d'arguments et embranchement) rend l'approche récursive moins performante que @ref:dfs-algorithm.
+
+On note que la fonction ```rust solve``` est dans les faits une @wrapper-function mettant en place la table de hachage utilisée pour la @memoization.
+
+=== Conclusion
+
+Ainsi, au travers des sections antérieures, on a pu explorer différentes approches de résolution.
+On peut conclure, de cette façon, que l'approche abordée dans @ref:dfs-algorithm est la plus prometteuse.
+On cherchera, dans les sections suivantes, à améliorer les performances de cet algorithme en s'appuyant sur la parallélisation.
 
 = Parallélisation
 
@@ -381,9 +686,7 @@ Au cours de cette étude, on s'intéressera au parcours en profondeur.
 
 == Implémentation des solutions
 
-=== Parcours en largeur
-
-=== Implémentation itérative
+=== Parcours en profondeur
 
 === Itérateur parallèle
 

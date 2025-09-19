@@ -55,9 +55,17 @@ short = "marqueur"
 group = "Rust"
 description = "Par convention, il s'agit d'un @trait dont le corps est vide et dont l'objectif est d'annoter un type comme ayant une propriété particulière."
 
+[memoization]
+short = "mémoïsation"
+description = "Il s'agit d'une mise en cache des valeurs de retour d'une fonction donnée afin d'éviter plusieurs évaluations pour des arguments identiques."
+
 [moore]
 short = "lois de Moore"
 description = "Ensemble de lois empiriques qui prédisent l'évolution de la puissance de calcul des processeurs."
+
+[lazy]
+short = "paresseux"
+description = "Terme qualifiant une expression dont l'évaluation est retardé jusqu'au moment où le résultat de ladite expression est nécessaire."
 
 [petgraph]
 short = "Petgraph"
@@ -74,6 +82,11 @@ short = "SSSP"
 long = "Single-Source Shortest Paths"
 description = "Le plus court chemin depuis un sommet donné."
 
+[technical-interview]
+short = "entrevue technique"
+plural = "entrevues techniques"
+description = "Il s'agit d'une entrevue, la plupart du temps lors d'un entretient d'embauche, visant à déterminer les compétences techniques d'un candidat à l'aide de questions et problèmes techniques."
+
 [trait]
 short = "trait"
 group = "Rust"
@@ -89,3 +102,7 @@ description = "Principal établissement de l'enseignement supérieur de la métr
 short = "vol de travail"
 group = "Généralités sur la concurrence"
 description = "Le vol de travail est une méthode d'ordonnancement où chaque processeur dispose d'une pile des tâches à effectuer. Si un des processus parvient à vider sa pile avant les autres, il #emph[vole] le travail des autres."
+
+[wrapper-function]
+short = "fonction wrapper"
+description = "Il s'agit d'une fonction dont le rôle principale est d'en appeler une autre."
