@@ -3,21 +3,23 @@
 #import "@preview/codly:1.3.0": *
 #import "@preview/codly-languages:0.1.1": *
 
+#import "@preview/cetz:0.4.2": *
 #import "@preview/diagraph:0.3.6": *
 #import "@preview/glossy:0.8.0": *
+#import "@preview/lovelace:0.3.0": *
 
 #show: init-glossary.with(toml("glossary.toml"), show-term: emph)
 #show: codly-init.with()
 
 #show figure.where(kind: raw): fig => {
-  set text(size: 0.798em)
+  set text(size: .798em)
   fig
 }
 
 #codly(
   highlighted-default-color: orange.lighten(80%),
   languages: codly-languages,
-  lang-outset: (x: 0.32em, y: 0.32em),
+  lang-outset: (x: .32em, y: .32em),
 )
 
 #show: ensimag.with(
@@ -150,7 +152,7 @@ Rust est un langage de programmation fournissant différentes fonctionnalité qu
 
 === Propriété et emprunt
 
-==== Une subtilité de la programmation concurrente
+==== Une subtilité de la programmation concurrente <ref:data-race-desc>
 
 Une @data-race survient en programmation concurrente lorsque deux threads ou plus accèdent simultanément à une même variable partagée avec plusieurs accès en écriture.
 Cet événement est souvent synonyme de programme non déterminisme et est, par conséquent, source de bogue.
@@ -259,13 +261,13 @@ Ainsi, même quand les #link(<ref:borrow-rules>)[règles d'emprunt] ne peuvent p
 === ```rust Send``` et ```rust Sync```
 
 Pour l'instant, on s'est intéressé au cas de la programmation synchrone.
-Que se passe-t-il alors lorque l'on souhaite utiliser plusieurs @fil:pl ?
+Que se passe-t-il alors lorque l'on souhaite utiliser plusieurs @thread:pl ?
 
 Afin d'être capable de discriminer les types qui peuvent être utiliser de manière concurrente introduit les @marqueur:pl ```rust Send``` et ```rust Sync```. @bib:the-rust-standard-library
 
-```rust Send``` assure qu'un type peut être envoyé d'un @fil à un autre sans problème. @bib:the-rust-standard-library
+```rust Send``` assure qu'un type peut être envoyé d'un @thread à un autre sans problème. @bib:the-rust-standard-library
 
-```rust Sync``` assure, quant à lui, que la référence d'un type peut être envoyé d'un @fil à un autre sans problème. En d'autres termes, ```rust T``` est ```rust Sync``` si, et seulement si, ```rust &T``` est ```rust Send```. @bib:the-rust-standard-library
+```rust Sync``` assure, quant à lui, que la référence d'un type peut être envoyé d'un @thread à un autre sans problème. En d'autres termes, ```rust T``` est ```rust Sync``` si, et seulement si, ```rust &T``` est ```rust Send```. @bib:the-rust-standard-library
 
 #figure(
   ```rust
@@ -306,9 +308,9 @@ Elle peut être utiliser de deux manières différentes :
   }
   ```,
   caption: [Exemple d'utilisation de @rayon],
-) <ref:par-iterator>
+) <ref:rayon-demo>
 
-@ref:par-iterator illustre la similitude entre l'utilisation des itérateurs classiques de la bibliothèque standard d'une part, et, d'autre part, celle des itérateurs parallèles fournis par @rayon.
+@ref:rayon-demo illustre la similitude entre l'utilisation des itérateurs classiques de la bibliothèque standard d'une part, et, d'autre part, celle des itérateurs parallèles fournis par @rayon.
 
 De manière générale, une méthode du @trait ```rust Iterator``` a son équivalent dans ```rust ParallelIterator```. @bib:rayon
 
@@ -405,10 +407,10 @@ Pour bien comprendre en quoi celui-ci est intéressant, on va détailler ce qui 
 
 Pour commencer, on proposera un modèle mathématique pour représenter le problème.
 
-On pose $(frak(P)_k)_k in {top, bot}^NN$ tel que, pour tout $k in NN$,
+On pose $(frak(p)_k)_k in {top, bot}^NN$ tel que, pour tout $k in NN$,
 
 $
-  frak(P)_k = cases(
+  frak(p)_k = cases(
     top "s'il y a une pierre à la position" k,
     bot "sinon"
   )
@@ -421,7 +423,7 @@ On pose $phi : S -> {top, bot}$ défini par induction pour tout $(p, v) in S$ et
 $
   phi (p, v) = cases(
     top "si" p = n - 1,
-    bot "si" not frak(P)_p,
+    bot "si" not frak(p)_p,
     or_(k in {-1, 0, 1}) phi_k (p + v + k, v + k) "sinon",
   )
 $
@@ -432,7 +434,7 @@ On peut ainsi se ramener à un graphe.
 On pose
 
 $
-  V &= { (p, v) in S | frak(P)_p } \
+  V &= { (p, v) in S | frak(p)_p } \
   E &= { (a, b) in V^2 | exists k in {-1, 0, 1}, b = a + (k, k) }
 $
 
@@ -469,6 +471,22 @@ Au cours des sections suivantes, on notera $T_s (n)$ (resp. $E_s (n)$) la comple
     ),
   ),
   highlights: (
+    (
+      line: 4,
+      start: 11,
+      end: 20,
+      fill: red,
+      label: <ref:dfs-algorithm:hash-map>,
+      tag: [(table de hachage)],
+    ),
+    (
+      line: 5,
+      start: 11,
+      end: 18,
+      fill: green,
+      label: <ref:dfs-algorithm:stack>,
+      tag: [(pile)],
+    ),
     (
       line: 22,
       start: 19,
@@ -680,15 +698,434 @@ On cherchera, dans les sections suivantes, à améliorer les performances de cet
 
 = Parallélisation
 
+Au cours des sous-sections suivantes, on expliquera la démarche qui a permis de mettre en place une solution parallèle du #link(<ref:frog-jump-intro>)[problème étudié].
+On s'intéressera, dans un premier temps, aux différentes problématiques qui rendent la parallélisation de @ref:dfs-algorithm difficile ; puis, dans un second temps, on présentera les deux approches développées.
+
 == Problématiques
+
+Après analyse de @ref:dfs-algorithm, on peut remarquer deux difficultés notables quant à la parallélisation de cet algorithme : il s'agit des deux variables en accès mutable que sont
+- la table de hachage @ref:dfs-algorithm:hash-map qui permet de retenir les sommets analysés,
+- la pile @ref:dfs-algorithm:stack qui liste les sommets à analyser.
+
+Comme expliqué dans la @ref:data-race-desc, le partage de variable mutable dans plusieurs @thread:pl est sujet à @data-race:pl.
+
+== Première approche <ref:par-dfs-algorithm>
+
+Au cours de cette section, on étudiera une approche se basant sur #emph[extrapolation] de l'algorithme séquentiel @ref:dfs-algorithm.
+
+On commencera par étudier les réponses apportées aux deux problématiques précédemment évoquées, puis on présentera l'implémentation proposée de manière plus détaillée.
+
+=== La pile
+
+#figure(
+  canvas({
+    import draw: anchor, arc, circle, content, group, line
+
+    let arrow-style = (
+      mark: (end: "curved-stealth", fill: black),
+      stroke: .8pt,
+    )
+
+    let before-sizes = (1, 1, 1)
+    let after-sizes = (.9, 1.7, 1.3)
+
+    let cylinder(name: none, suffix: none, to, sizes) = group(
+      {
+        let (a, b, c) = sizes
+
+        // Thirds
+
+        arc(
+          (rel: (1.5, -c), to: to),
+          start: 0deg,
+          stop: -180deg,
+          radius: (1.5, .5),
+          stroke: (dash: "dashed"),
+          name: "third",
+        )
+
+        arc(
+          (rel: (1.5, -(b + c)), to: to),
+          start: 0deg,
+          stop: -180deg,
+          radius: (1.5, .5),
+          stroke: (dash: "dashed"),
+          name: "second",
+        )
+
+        // Top and bottom
+
+        circle(
+          (rel: (0, 0), to: to),
+          radius: (1.5, .5),
+          name: "top",
+        )
+
+        arc(
+          (rel: (1.5, -(a + b + c)), to: to),
+          start: 0deg,
+          stop: -180deg,
+          radius: (1.5, .5),
+          name: "bottom",
+        )
+
+        // Labels
+
+        for (i, pos) in ("bottom", "second", "third").enumerate() {
+          content(
+            (pos + ".arc-start", 50%, pos + ".arc-end"),
+            $#i#suffix$,
+          )
+        }
+
+        // Horizontal lines
+
+        line("bottom.arc-end", "top.west")
+        line("bottom.arc-start", "top.east")
+      },
+
+      name: name,
+    )
+
+    let cylinders(name: none, suffix: none, before, sizes) = group(
+      {
+        for (i, (pos, d)) in ("left", "mid", "right").zip(sizes).enumerate() {
+          circle(
+            (rel: (0, -1), to: before + "." + pos + ".end"),
+            radius: (1.5, .5),
+            name: pos + "-top",
+          )
+
+          arc(
+            (rel: (1.5, -d), to: pos + "-top.center"),
+            start: 0deg,
+            stop: -180deg,
+            radius: (1.5, .5),
+            name: pos + "-bottom",
+          )
+
+          line(pos + "-bottom.arc-end", pos + "-top.west")
+          line(pos + "-bottom.arc-start", pos + "-top.east")
+
+          content(
+            (pos + "-bottom.center", 40%, pos + "-top.center"),
+            $#i#suffix$
+          )
+        }
+      },
+
+      name: name,
+    )
+
+    // Before cylindre
+
+    anchor("origin", (0, 0))
+    cylinder(name: "before-cylindre", "origin", before-sizes)
+
+    // Split arrows
+
+    group(
+      {
+        line(
+          (rel: (0, -.5), to: "before-cylindre.south"),
+          (rel: (0, -2)),
+          name: "mid",
+          ..arrow-style,
+        )
+
+        line(
+          (rel: (0, 0), to: "mid.start"),
+          (rel: (-3.1, 0), to: "mid.end"),
+          name: "left",
+          ..arrow-style,
+        )
+
+        line(
+          (rel: (0, 0), to: "mid.start"),
+          (rel: (3.1, 0), to: "mid.end"),
+          name: "right",
+          ..arrow-style,
+        )
+      },
+
+      name: "split-arrows",
+    )
+
+    // Split cylinders
+
+    cylinders(name: "split", "split-arrows", before-sizes)
+
+    // Transform arrows
+
+    group(
+      {
+        for (i, pos) in ("left", "mid", "right").enumerate() {
+          let to = "split." + pos + "-bottom.south"
+
+          line(
+            (rel: (0, -.5), to: to),
+            (rel: (0, -2.5), to: to),
+            name: pos,
+            ..arrow-style,
+          )
+
+          content(
+            (pos + ".start", 50%, pos + ".end"),
+            angle: pos + ".start",
+            anchor: "mid",
+            align(center)[DFS \ (partiel)],
+          )
+        }
+      },
+
+      name: "transform-arrows",
+    )
+
+    cylinders(name: "transform-cylinders", suffix: $'$, "transform-arrows", after-sizes)
+
+    // Merge arrows
+
+    group(
+      {
+        line(
+          (rel: (0, -.5), to: "transform-cylinders.south"),
+          (rel: (0, -2)),
+          name: "mid",
+          ..arrow-style,
+        )
+
+        line(
+          (rel: (-3, -.5), to: "transform-cylinders.south"),
+          "mid.mid",
+          stroke: .8pt,
+        )
+
+        line(
+          (rel: (3, -.5), to: "transform-cylinders.south"),
+          "mid.mid",
+          stroke: .8pt,
+        )
+      },
+
+      name: "merge-arrows",
+    )
+
+    // After cylinder
+
+    anchor("merge-origin", (rel: (0, -.75), to: "merge-arrows.mid.end"))
+    cylinder(suffix: $'$, "merge-origin", after-sizes)
+  }),
+
+  caption: [Exécution d'une itération de @ref:stack-algorithm pour $n = 3$],
+  placement: auto,
+) <ref:stack-algorithm-example>
+
+Afin d'éviter de devoir à partager en écriture une pile, on procédera par réductions successives dont l'algorithme général @ref:stack-algorithm.
+
+#figure(
+  pseudocode-list[
+    + Créer une pile globale contenant le sommet #emph[racine].
+    + *Tant que* la pile globale n'est pas vide *faire*
+      + Diviser la pile globale en $n$ piles.
+      + *Pour chaque (parallèle)* pile locale *faire*
+        + Éxécuter l'algorithme intermédiaire avec la pile locale pour pile de travail.
+      + *fin*
+      + Fusionner les piles résultantes (en conservant le même ordre que durant la division) en une nouvelle pile globale.
+    + *fin*
+  ],
+
+  caption: [Algorithme de gestion de piles],
+  placement: auto,
+) <ref:stack-algorithm>
+
+De cette façon, l'écriture se fait à l'intérieur de chaque @thread et on ne requiert donc pas de gestion de concurrence.
+
+Ce choix d'implémentation permet de ne ne pas trop s'éloigner du fonctionnement de @ref:dfs-algorithm et assure ainsi un certain comportement.
+En effet, on remarque que les piles locales sont replacées dans le même ordre que pour leur prélévement : la configuration de la pile globale, après parcours en profondeur partiel, est relativement semblable à celle de @ref:dfs-algorithm pour une itération.
+
+On note que @ref:stack-algorithm est volontairement simplifié : celui-ci ne fait pas mention de la gestion d'arrêt prématurée : cette fonctionnalité est géré par la méthode ```rust ParallelIterator::try_fold``` de @rayon. @bib:rayon
 
 === La collection associative
 
-== Implémentation des solutions
+@ref:dfs-algorithm comporte également une table de hachage @ref:dfs-algorithm:hash-map qui permet de retenir les sommets déjà étudiés.
+Cette table est partagée en écriture pour chaque itération de la boucle principale : cela pose un problème pour la parallélisation pour des raisons d'écritures concurrentes.
 
-=== Parcours en profondeur
+@crates-io comporte plusieurs @crate:pl offrant une table de hachage concurrente.
+Après quelques @benchmark:pl, la @crate @dashmap s'est révélée être la plus prometteuse.
+Son principe de fonctionnement est de contraintre un synchronisme de données à l'aide d'un ```rust RwLock``` @bib:the-rust-standard-library tout en limitant les blocages ; en effet, l'espace des clefs est virtuellement divisé en plusieurs @shard:pl : de cette façon, les blocages ne se font qu'au niveau de ceux-si et cela limite les ralentissements en écriture. @bib:dashmap
 
-=== Itérateur parallèle
+Afin d'accroître encore les performances de la table de hachage, une autre fonction de hachage a été choisie : il s'agit de @ahash.
+Cette dernière offre de très bonnes performances en contrepartie de quoi elle n'est pas cryptographiquement sécurisée : ce qui, dans le cas présent, ne pose pas de problème. @bib:ahash
+
+=== Implémentation
+
+#codly(
+  annotations: (
+    (
+      start: 19,
+      end: 25,
+      content: block(
+        width: 2em,
+        rotate(-90deg, reflow: true)[Calcul des successeurs],
+      ),
+    ),
+  ),
+  highlighted-lines: (9, 29, 31),
+  highlights: (
+    (
+      line: 4,
+      start: 5,
+      end: 14,
+      fill: red,
+      label: <ref:partial-dfs-algorithm:hash-map>,
+      tag: [(table de hachage)],
+    ),
+    (
+      line: 2,
+      start: 9,
+      end: 16,
+      fill: green,
+      label: <ref:partial-dfs-algorithm:stack:0>,
+      tag: [(pile locale)],
+    ),
+    (
+      line: 39,
+      start: 8,
+      end: 15,
+      fill: green,
+      label: <ref:partial-dfs-algorithm:stack:1>,
+      tag: [(nouvelle pile locale)],
+    ),
+  ),
+)
+
+#figure(
+  ```rust
+  fn solve(
+      mut to_visit: Vec<State>,
+      has_stone: &[bool],
+      is_visited: &dashmap::DashSet<State, ahash::RandomState>,
+      threshold: usize,
+  ) -> Option<Vec<State>> {
+    let len = has_stone.len();
+
+    for _ in 0..threshold {
+      match to_visit.pop() {
+        None => break,
+
+        Some(state @ (p, s)) => {
+          if is_visited.insert(state) {
+            let small_speed = s - 1;
+            let big_speed = s + 1;
+            let big_position = p + big_speed;
+
+            let next = Some((big_position, big_speed))
+              .into_iter()
+              .chain((small_speed > 0).then_some((p + small_speed, small_speed)))
+              .chain(Some((p + s, s)))
+              .filter(|state @ &(p, _)| {
+                (p < len) && has_stone[p] && !is_visited.contains(state)
+              });
+
+            for state @ (p, _) in next {
+              if p == len - 1 {
+                return None;
+              } else {
+                to_visit.push(state);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    Some(to_visit)
+  }
+  ```,
+
+  caption: [Parcours en profondeur partiel avec possibilité d'arrêt précoce],
+  placement: auto,
+  scope: "parent",
+) <ref:partial-dfs-algorithm>
+
+@ref:dfs-algorithm:stack requiert l'utilisation d'un algorithme permettant un parcours en profondeur partiel avec possibilité d'arrêt précoce.
+Par #quote[partiel], on entend que la boucle principale n'effectue qu'un nombre d'itérations fixé; et, par #quote[possibilité d'arrêt précoce], on décrit la possibilité d'arrêter l'algorithme le plus rapidement possible à partir du moment où on à trouver un sommet tel que, pour un $v in [|1, n|]$, le sommet $(n - 1, v)$ est atteint.
+
+Cet algorithme est présenté en @ref:partial-dfs-algorithm.
+
+Comme présenté en @ref:stack-algorithm et @ref:stack-algorithm-example, @ref:partial-dfs-algorithm:stack:0 fait apparaître une pile locale en entrée qui est, une fois processée, retournée @ref:partial-dfs-algorithm:stack:1.
+
+@ref:partial-dfs-algorithm:9 montre que le parcours en profondeur est bien partiel et n'effectuera qu'un nombre donné d'itérations.
+
+En cas de découverte d'un #emph[sommet de fin] @ref:partial-dfs-algorithm:29, on retourne ```rust None``` afin que ```rust ParallelIterator::try_fold``` puisse cesser l'exécution parallèle le plus tôt possible. @bib:rayon Dans le cas contraire, on ajoute les nouveaux sommets à explorer dans la pile locale.
+
+== Une approche plus @rayon[rayonnante]
+
+#codly(
+  annotations: (
+    (
+      start: 15,
+      end: 26,
+      content: block(
+        width: 2em,
+        rotate(-90deg, reflow: true)[Calcul des successeurs],
+      ),
+    ),
+  ),
+  highlights: (
+    (
+      line: 5,
+      start: 7,
+      end: 16,
+      fill: red,
+      label: <ref:par-iter-algorithm:hash-map>,
+      tag: [(table de hachage)],
+    ),
+  ),
+)
+
+#figure(
+  ```rust
+  pub fn solve(input: &Input) -> bool {
+    use rayon::{iter::walk_tree, prelude::*};
+
+    let is_visited = dashmap::DashSet::<_, ahash::RandomState>::default();
+
+    walk_tree((0, 1), |&state @ (p, s)| {
+      is_visited
+        .insert(state)
+        .then(|| {
+          let small_speed = s - 1;
+          let big_speed = s + 1;
+          let big_position = p + big_speed;
+
+          Some((big_position, big_speed))
+            .into_iter()
+            .chain((small_speed > 0).then_some((p + small_speed, small_speed)))
+            .chain(Some((p + s, s)))
+            .filter(|state @ &(p, _)| {
+              (p < input.len()) && input.has_stone[p] && !is_visited.contains(state)
+            })
+        })
+        .into_iter()
+        .flatten()
+    })
+    .find_any(|&(p, _)| p == input.len() - 1)
+    .is_some()
+  }
+  ```,
+
+  caption: [Implémentation avec itérateur parallèle],
+  placement: auto,
+  scope: "parent",
+) <ref:par-iter-algorithm>
+
+@rayon offre une autre approche, plus facile de mise en place, grâce à la fonction ```rust walk_tree```.
+Celle-ci automatise la construction d'un ```rust ParallelIterator``` en prenant la racine d'un arbre et une @closure qui génère les successeurs (sous la forme d'un ```rust IntoIterator```). @bib:the-rust-standard-library @bib:rayon
+Il existe une petite suptilité car on travaille sur un graphe et non arbre : il faut donc @capture[capturer] une table de hachage qui doit donc être, comme pour @ref:par-dfs-algorithm, concurrente afin de retenir les sommets déjà exploré.
+
+Une fois le ```rust ParallelIterator``` créé avec ```rust walk_tree```, il est possible d'appeler ```rust ParallelIterator::find_any``` afin de chercher, pour n'importe quel $v in [|1, n|]$, le sommet $(n - 1, v)$.
+On applique ensuite ```rust Option::is_some``` afin de vérifier s'il existe un pareil sommet dans la composante connexe enracinnée en $(0, 1)$. @bib:the-rust-standard-library @bib:rayon
 
 = Analyse des résultats
 
@@ -726,4 +1163,4 @@ Je tiens également à féliciter mes collègues qui ont pu occasionnellement m'
   },
 )
 
-#glossary(theme: theme, title: "Glossaire")
+#glossary(theme: theme, title: text(size: 10pt)[Glossaire])

@@ -1,7 +1,27 @@
+[ahash]
+short = "ahash"
+group = "Rust"
+description = "Une @crate fournissant la fonction de hachage la plus rapide en Rust qui n'est toutefois pas cryptographiquement sécurisée."
+
+[benchmark]
+short = "test de performance"
+plural = "tests de performance"
+description = "Un test dont l'objectif est de déterminer la performance d'un programme informatique."
+
 [borrow-checker]
 short = "borrow checker"
 group = "Rust"
 description = "Un sous-programme, partie intégrante du compilateur Rust, qui assure la sécurité de la mémoire en imposant des règles sur l'utilisation des références."
+
+[capture]
+short = "capture"
+group = "Rust"
+description = "Phénomène permettant d'utiliser une variable définit à l'extérieur du corps d'une @closure."
+
+[closure]
+short = "closure"
+group = "Rust"
+description = "Une fonction capable de @capture[capturer] son environnement englobant."
 
 [cnrs]
 short = "C.N.R.S."
@@ -13,6 +33,16 @@ description = "Principal organisme public français de recherche."
 short = "crate"
 group = "Rust"
 description = "La plus petite unité de code compilable en Rust. Par extension, ce terme désigne une bibliothèque dans ce langage."
+
+[crates-io]
+short = "crates.io"
+group = "Rust"
+description = "https://crates.io/ -- Le dépôt communautaire de @crate:pl pour Rust."
+
+[dashmap]
+short = "DashMap"
+group = "Rust"
+description = "Une @crate offrant une implémentation d'une table de hachage concurrente en Rust."
 
 [datamove]
 short = "DATAMOVE"
@@ -28,11 +58,6 @@ description = "Événement qui survient en programmation concurrente lorsque deu
 short = "diviser pour régner"
 group = "Généralités sur la concurrence"
 description = "Technique algorithmique consistant à diviser le travail à effectuer en plusieurs sous-tâches (diviser), à résoudre récursivement ces sous-problèmes (régner) et à combiner, encore de manière récursive, les solutions obtenues pour former la solution du problème global."
-
-[fil]
-short = "fil"
-group = "Généralités sur la concurrence"
-description = "Un fil (ou #emph[thread] en anglais) est la plus petite succession d'instruction que l'ordonnanceur du système d'exploitation peut gérer."
 
 [inria]
 short = "Inria"
@@ -77,6 +102,11 @@ short = "Rayon"
 group = "Rust"
 description = "Une bibliothèque de parallélisme de donnée pour Rust."
 
+[shard]
+short = "shard"
+group = "Rust"
+description = "Pour @dashmap, il s'agit d'un fragment de l'espace de clef."
+
 [sssp]
 short = "SSSP"
 long = "Single-Source Shortest Paths"
@@ -86,6 +116,11 @@ description = "Le plus court chemin depuis un sommet donné."
 short = "entrevue technique"
 plural = "entrevues techniques"
 description = "Il s'agit d'une entrevue, la plupart du temps lors d'un entretient d'embauche, visant à déterminer les compétences techniques d'un candidat à l'aide de questions et problèmes techniques."
+
+[thread]
+short = "fil"
+group = "Généralités sur la concurrence"
+description = "Un fil (ou #emph[thread] en anglais) est la plus petite succession d'instruction que l'ordonnanceur du système d'exploitation peut gérer."
 
 [trait]
 short = "trait"
