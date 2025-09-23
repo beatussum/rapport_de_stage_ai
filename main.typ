@@ -334,7 +334,7 @@ De manière générale, une méthode du @trait ```rust Iterator``` a son équiva
     ```
   ),
 
-  caption: "Exemple de graphe",
+  caption: [Exemple de graphe],
 ) <ref:graph>
 
 Nombre de problèmes peuvent être ramenés à une représentation sous la forme de graphe.
