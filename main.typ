@@ -1129,9 +1129,78 @@ On applique ensuite ```rust Option::is_some``` afin de vérifier s'il existe un 
 
 = Analyse des résultats
 
-== Mesure de l'efficacité
+#figure(
+  raw-render(
+    ```dot
+    digraph {
+      a -> b
+      b -> c
+      c -> d
 
-== Limites du parallélisme
+      subgraph {
+        node [style=filled];
+
+        d -> e
+        e -> f
+        e -> g
+        e -> h
+        g -> f
+        g -> h
+        h -> f
+      }
+
+      subgraph {
+        node [style=filled];
+
+        d -> "e'"
+        "e'" -> "f'"
+        "e'" -> "g'"
+        "e'" -> "h'"
+        "g'" -> "f'"
+        "g'" -> "h'"
+        "h'" -> "f'"
+      }
+    }
+    ```
+  ),
+
+  caption: [Configuration avec composantes connexes],
+) <ref:split-graph>
+
+#figure(
+  raw-render(
+    ```dot
+    digraph {
+      a -> b
+      a -> c
+      a -> d
+      b -> c
+      b -> d
+      b -> e
+      c -> d
+      c -> e
+      d -> e
+    }
+    ```
+  ),
+
+  caption: [Configuration avec graphe dense],
+) <ref:dense-graph>
+
+Au cours des sections précédentes, il a été possible d'établir deux algorithmes parallèles dont le principe de fonctionnant diffère : les performances obtenues sont donc variables suivant la configuration du graphe $G$ en entrée.
+En d'autres termes, il a été possible, pour chacun des deux algorithmes, d'identifier une configuration dans laquelle l'algorithme en question se comporte bien.
+
+Au cours des lignes suivantes, on étudiera deux configurations précises :
+- @ref:split-graph représente une configuration de $G$ dans laquelle le graphe fait apparaître plusieurs #emph[composantes connexes] ;
+- quant à elle, @ref:dense-graph illustre une configuration où les sommets sont très interconnectés.
+
+== Configuration avec composantes connexes
+
+TODO
+
+== Configuration avec graphe dense
+
+TODO
 
 = Généricité
 
