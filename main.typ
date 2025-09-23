@@ -919,7 +919,6 @@ On commencera par étudier les réponses apportées aux deux problématiques pr�
   }),
 
   caption: [Exécution d'une itération de @ref:stack-algorithm pour $n = 3$],
-  placement: auto,
 ) <ref:stack-algorithm-example>
 
 Afin d'éviter de devoir à partager en écriture une pile, on procédera par réductions successives dont l'algorithme général @ref:stack-algorithm.
@@ -937,7 +936,6 @@ Afin d'éviter de devoir à partager en écriture une pile, on procédera par r�
   ],
 
   caption: [Algorithme de gestion de piles],
-  placement: auto,
 ) <ref:stack-algorithm>
 
 De cette façon, l'écriture se fait à l'intérieur de chaque @thread et on ne requiert donc pas de gestion de concurrence.
