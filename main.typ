@@ -821,8 +821,8 @@ On commencera par étudier les réponses apportées aux deux problématiques pr�
 
     // Before cylindre
 
-    anchor("origin", (0, 0))
-    cylinder(name: "before-cylindre", "origin", before-sizes)
+    anchor("before-origin", (0, 0))
+    cylinder(name: "before-cylindre", "before-origin", before-sizes)
 
     // Split arrows
 
