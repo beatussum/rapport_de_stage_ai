@@ -68,6 +68,8 @@
   figure-supplement: [Fig.],
 )
 
+#outline(depth: 3)
+
 = Avant-propos
 
 == Contexte
