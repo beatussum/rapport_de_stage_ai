@@ -9,12 +9,14 @@
 #import "@preview/lovelace:0.3.0": *
 
 #show: init-glossary.with(toml("glossary.toml"), show-term: emph)
-#show: codly-init.with()
 
 #show figure.where(kind: raw): fig => {
+  show raw.where(block: true, lang: "dot"): it => no-codly(raw-render(it))
   set text(size: .798em)
   fig
 }
+
+#show: codly-init.with()
 
 #codly(
   highlighted-default-color: orange.lighten(80%),
@@ -319,20 +321,18 @@ De manière générale, une méthode du @trait ```rust Iterator``` a son équiva
 == Algorithmes de graphe
 
 #figure(
-  raw-render(
-    ```dot
-    digraph {
-      a -> b [label = 1]
-      a -> c [label = 10]
-      b -> e [label = 4]
-      c -> d [dir = both label = 2]
-      c -> e [label = 3]
-      d -> f [label = 5]
-      e -> f [label = 20]
-      e -> d [label = 6]
-    }
-    ```
-  ),
+  ```dot
+  digraph {
+    a -> b [label = 1]
+    a -> c [label = 10]
+    b -> e [label = 4]
+    c -> d [dir = both label = 2]
+    c -> e [label = 3]
+    d -> f [label = 5]
+    e -> f [label = 20]
+    e -> d [label = 6]
+  }
+  ```,
 
   caption: [Exemple de graphe],
 ) <ref:graph>
@@ -1127,62 +1127,58 @@ Il existe une petite suptilité car on travaille sur un graphe et non arbre : il
 Une fois le ```rust ParallelIterator``` créé avec ```rust walk_tree```, il est possible d'appeler ```rust ParallelIterator::find_any``` afin de chercher, pour n'importe quel $v in [|1, n|]$, le sommet $(n - 1, v)$.
 On applique ensuite ```rust Option::is_some``` afin de vérifier s'il existe un pareil sommet dans la composante connexe enracinnée en $(0, 1)$. @bib:the-rust-standard-library @bib:rayon
 
-= Analyse des résultats
+= Analyse des résultats <ref:results>
 
 #figure(
-  raw-render(
-    ```dot
-    digraph {
-      a -> b
-      b -> c
-      c -> d
+  ```dot
+  digraph {
+    a -> b
+    b -> c
+    c -> d
 
-      subgraph {
-        node [style=filled];
+    subgraph {
+      node [style=filled];
 
-        d -> e
-        e -> f
-        e -> g
-        e -> h
-        g -> f
-        g -> h
-        h -> f
-      }
-
-      subgraph {
-        node [style=filled];
-
-        d -> "e'"
-        "e'" -> "f'"
-        "e'" -> "g'"
-        "e'" -> "h'"
-        "g'" -> "f'"
-        "g'" -> "h'"
-        "h'" -> "f'"
-      }
+      d -> e
+      e -> f
+      e -> g
+      e -> h
+      g -> f
+      g -> h
+      h -> f
     }
-    ```
-  ),
+
+    subgraph {
+      node [style=filled];
+
+      d -> "e'"
+      "e'" -> "f'"
+      "e'" -> "g'"
+      "e'" -> "h'"
+      "g'" -> "f'"
+      "g'" -> "h'"
+      "h'" -> "f'"
+    }
+  }
+  ```,
 
   caption: [Configuration avec composantes connexes],
 ) <ref:split-graph>
 
 #figure(
-  raw-render(
-    ```dot
-    digraph {
-      a -> b
-      a -> c
-      a -> d
-      b -> c
-      b -> d
-      b -> e
-      c -> d
-      c -> e
-      d -> e
-    }
-    ```
-  ),
+  ```dot
+  digraph {
+    a -> b
+    a -> c
+    a -> d
+    b -> c
+    b -> d
+    b -> e
+    c -> d
+    c -> e
+    d -> e
+  }
+  ```,
 
   caption: [Configuration avec graphe dense],
 ) <ref:dense-graph>
