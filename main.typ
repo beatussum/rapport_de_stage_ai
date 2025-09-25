@@ -1210,9 +1210,38 @@ TODO
 
 = Synthèse générale
 
-== Bilan personnel
+Il est dorénavant temps de faire le point sur ce stage dans l'équipe @datamove.
+On s'intéressera d'abord aux aspects techniques, puis je terminerai par un bilan personnel.
 
 == Conclusion technique
+
+Au travers de la @ref:results, il a été possible d'établir que les performances d'un algorithme diffère grandement d'une configuration à une autre.
+
+Il a été possible de montrer que les algorithmes parallèles faisait apparaître certains goulets d'étranglement, notamment dû aux synchronisme en mémoire afin de gérer les écritures concurrentes et éviter ainsi les @data-race:pl.
+
+En particulier, on n'a pas pu établir un algorithme parallèle qui performait mieux que son équivalent séquentiel pour la configuration en @ref:dense-graph : en effet, dans ce cas précis, les écritures concurrentes sont si fréquente que le synchronisme en mémoire induit un très fort ralentissement.
+
+Ces coûts sont décuplés par l'algorithme de parcours en profondeur parallèle du fait que la boucle parallèle est imbriqué dans une boucle séquentielle : les surcoûts liés à la programmation parallèle s'ajoutent donc.
+
+A contrario, l'algorithme par itérateur parallèle fonctionne par une division du travail en sous-tâches qui est fixée avant l'exéction : les surcoûts apparaissent donc moins mais le travail à effectué est moins et moins bien divisé : le travail, étant divisée qu'une seule fois, ne peut pas bien géré des cas où les tâches sont inégales.
+
+De cette façon, il a été possible d'établir des algorithmes de recherche d'existence de chemin séquentiels et parallèles mais dont les performances sont variables en fonction du contexte ; le choix revient donc à l'utilisateur de préférer une solution séquentielle ou parallèle.
+
+De manière générale, il a été possible d'établir une interface générique fournissant deux algorithmes parallèles :
+- recherche d'exitence de chemin, et
+- recherche de plus court chemin (ou @sssp).
+
+== Bilan personnel
+
+Au-delà des aspects techniques, ce stage a été l'occasion de découvrir le monde de la recherche académique.
+
+J'ai notamment eu l'occasion d'échanger avec des personnes de mon âge travaillant au @lig dont les domaines était assez variés.
+Certains avaient déjà une certaine expérience du Rust, ce qui m'a permis de progresser plus rapidements que je ne l'aurais pu seul.
+
+J'ai pu apprendre en discutant avec chacun ce qu'il faisait au sein du @lig, ce qui m'a permis d'en apprendre plus sur le fonctionnement de cet établissement.
+En particulier, j'ai découvert que certains ne travaillaient pas en tant que chercheurs mais en tant qu'ingénieurs : en effet, certains outils ont besoin d'être développés ou maintenus pour que des équipes puissent les utiliser dans leur travaux.
+
+Enfin, j'ai pu jetter un rapide coup d'œil à l'infrastructure informatique du laboratoire qui est un des rares centres de calcul de France.
 
 = Remerciements
 
