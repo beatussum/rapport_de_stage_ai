@@ -318,6 +318,40 @@ Elle peut être utiliser de deux manières différentes :
 
 De manière générale, une méthode du @trait ```rust Iterator``` a son équivalent dans ```rust ParallelIterator```. @bib:rayon
 
+=== Plomberie
+
+Les itérateurs parallèles sont plus complexes que les itérateurs séquentiels car ils doivent pouvoir se diviser et fonctionner en parallèle sur les deux moitiés.
+La conception actuelle des itérateurs parallèles a deux modes distincts :
+- #emph[pull] (dont les traits ```rust Producer``` et ```rust UnindexedProducer``` permettent d'implémenter ce comportement) : l'itérateur est demandé de produire l'élément suivant en utilisant un appel à ```rust ParallelIterator::next```.
+ Il s'agit d'un fonctionnement similaire à un itérateur normal, mais avec une particularité : on peut diviser l'itérateur en deux pour produire des éléments disjoints dans des @thread:pl séparés.
+- #emph[push] (```rust Consumer``` et ```rust UnindexedConsumer```) : l'itérateur se voit donner chaque élément à tour de rôle, qui est ensuite traité.
+ C'est l'inverse du fonctionnement d'un itérateur normal.
+ Ce comportement pourrait être comparé à ```rust Iterator::for_each``` : chaque fois qu'un nouvel élément est produit, la méthode ```rust Folder::consume``` est appelée avec cet élément. @bib:rayon
+
+#figure(
+  ```rust
+  use rayon::prelude::*;
+
+  vec_1.par_iter()
+    .zip(&vec_2)
+    .flat_map(some_function)
+    .for_each(some_other_function);
+  ```,
+
+  caption: [Exécution d'un itérateur parallèle],
+) <ref:par-iter-execution-example>
+
+Afin de mieux comprendre le fonctionnement de @rayon, on étudiera @ref:par-iter-execution-example dont l'exécution se lit de bas en haut et commence donc par
++ la création du consommateur final (```rust ForEachProducer```) par ```rust ParallelIterator::for_each```,
++ cedit consommateur est remonté à l'itérateur de base ```rust FlatMap``` créé par ```rust ParallelIterator::flat_map``` qui enveloppe ```rust ForEachProducer``` dans un ```rust FlatMapProducer```,
++ on passe alors en mode #emph[pull] car ```rust Zip``` ne peut pas être implémenté en tant que consommateur car il doit être capable de coordonner deux itérateurs parallèles.
+    + ```rust Zip``` créé un ```rust ZipProducer``` et le lie avec le consommateur remonté.
+    + Les producteurs des deux itérateurs #emph[zippés] sont alors générés. @bib:rayon
+
+En interne deux fonctions ont une importance capitale :
+- ```rust ParallelIterator::drive``` qui permet de lier un producteur à un consommateur avec la possibilité d'un découpage#footnote[Cette fonction est normalement à l'origine d'un appel à ```rust bridge``` qui implémente, dans les faits, le découpage en sous-tâches.], et
+- ```rust ParallelIterator::with_producer``` qui permet de transformer un itérateur en producteur. @bib:rayon
+
 == Algorithmes de graphe
 
 #figure(
