@@ -16,6 +16,11 @@
   fig
 }
 
+#show link: it => {
+  set text(fill: gray)
+  it
+}
+
 #show: codly-init.with()
 
 #codly(
@@ -1234,9 +1239,214 @@ TODO
 
 = Généricité
 
+Pour l'instant, les solutions algorithmiques qui ont été développées ne peuvent être utilisées que pour le #link(<ref:frog-jump-intro>)[problème @leetcode étudié].
+
+Au cours de cette section, on proposera deux interfaces génériques :
++ la première fonctionnant de manière autonome, et
++ la seconde s'appuyant sur la @crate @petgraph.
+
 == Une @crate autonome
 
+Tout au long des lignes suivantes, on étudiera l'@api mis en place pour cette solution et on terminera par un exemple d'utilisation.
+
+=== @api
+
+#figure(
+  image("uml/nodify.svg"),
+  caption: [Diagramme de classe de @nodify],
+  placement: auto,
+  scope: "parent",
+) <ref:nodify-uml>
+
+Le principe de fonctionnement de cette @crate repose sur la généralisation de notion d'itérateurs : un itérateur sur le nœud d'un graphe n'a pas un seul successeur#footnote[```rust Iterator::next``` a pour valeur de retour un ```rust Option<Self::Item>```.] mais potentiellement une infinité.
+
+Ainsi, le @trait ```rust Node``` est, dans les faits, équivalent à ```rust Iterator``` à l'exception du fait que la méthode ```rust Node::outgoing``` ne retourne pas un successeur mais un itérateur sur les successeurs de ce nœud.
+
+```rust Node``` fonctionne de pair avec ```rust Process``` qui, quant à lui, traduit les opérations supportées pour un algorithme donné.
+À l'heure actuelle, il existe trois opérations différentes, qui sont implémentés par un @trait :
+- ```rust Contains``` qui permet de savoir si un graphe contient un nœud vérifiant un prédicat donné ;
+- ```rust FindAny``` qui permet d'obtenir un nœud vérifiant un prédicat ;
+- ```rust FindFirst``` qui permet d'obtenir le premier nœud vérifiant un prédicat#footnote[Pour un graphe pondéré seulement, il s'agit du plus court chemin.].
+
+Ces trois processus sont implémentés par trois algorithmes :
+- ```rust DFS``` qui repose sur @ref:dfs-algorithm,
+- ```rust ParallelDFS``` sur @ref:par-dfs-algorithm, et
+- ```rust DeltaStepping``` sur TODO.
+
+L'utilisation de ```rust Node::to_process``` s'appuie sur une spécialisation de la méthode à l'aide de la @turbofish, notation un peu singulière qui justifie que l'on s'y attarde un peu.
+
+==== La @turbofish
+
+Cette notation est une particularité de Rust qui le distingue d'autres langage tel que le C++.
+En effet, Rust vise à avoir une grammaire non contextuelle afin de simplifier son traîtement.
+
+#figure(
+  ```rust
+  fn main() {
+    let (the, guardian, stands, resolute) = ("the", "Turbofish", "remains", "undefeated");
+    let _: (bool, bool) = (the<guardian, stands>(resolute));
+  }
+  ```,
+
+  caption: [Justification de l'existence de la @turbofish],
+  placement: auto,
+  scope: "parent",
+) <ref:turbofish>
+
+
+@ref:turbofish montre une ambiguïté :
+- ```rust (the<guardian, stands>(resolute))``` peut être interprété comme un appel spécialisé à la fonction ```rust fn the<'a, A, B>(&'a str) -> (bool, bool)``` ;
+- ou ```rust the<guardian``` et ```rust stands>(resolute)``` peuvent être interprétés comme deux comparaisons.
+
+Ainsi, la @turbofish, avec l'ajout de deux `:`, permet de lever cette ambiguïté.
+
+=== Exemple
+
+#codly(
+  highlighted-lines: range(20, 28),
+  highlights: (
+    (
+      line: 34,
+      start: 9,
+      end: 19,
+      fill: red,
+      label: <ref:nodify-example:to-process>,
+      tag: [(conversion en algorithme)],
+    ),
+    (
+      line: 34,
+      start: 20,
+      end: 29,
+      fill: green,
+      label: <ref:nodify-example:turbofish>,
+      tag: [(@turbofish)],
+    ),
+    (
+      line: 35,
+      start: 9,
+      fill: orange,
+      label: <ref:nodify-example:process>,
+      tag: [(application du processus)],
+    ),
+  ),
+)
+
+#figure(
+  ```rust
+  use nodify::prelude::*;
+  use std::iter::once;
+
+  #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+  pub struct FiboNode {
+      pub previous: u64,
+      pub current: u64,
+  }
+
+  impl FiboNode {
+      pub fn first() -> Self {
+          Self {
+              previous: 0,
+              current: 1,
+          }
+      }
+  }
+
+  impl Node for FiboNode {
+      fn outgoing(self) -> impl Iterator<Item = Self> {
+          let next = Self {
+              previous: self.current,
+              current: self.previous + self.current,
+          };
+
+          once(next)
+      }
+  }
+
+  fn main() {
+      let first = FiboNode::first();
+
+      let result = first
+          .to_process::<DFS<_>>()
+          .contains(|FiboNode { current, .. }| current == 610);
+
+      println!("{first:?} => {result}");
+  }
+  ```,
+
+  caption: [Exemple d'utilisation de @nodify (`examples/fibonacci.rs`)],
+  placement: auto,
+  scope: "parent",
+) <ref:nodify-example>
+
+@ref:nodify-example illustre un cas très simple d'utilisation de @nodify : le but est de vérifier si une valeur donnée est atteinte dans la @fibonacci.
+
+On implémente une structure nœud représentant la valeur courante de la @fibonacci et qui sauvegarde également la valeur précédente afin d'être capable de générer la suivante.
+
+Comme on peut le voir dans l'implémentation de ```rust Node::outgoing```, l'implémentation est très simple car le nombre de successeur est unitaire.
+
+À @ref:nodify-example:33, le résultat est calculé de la manière suivante :
++ à @ref:nodify-example:to-process on convertit le nœud en ```rust Process``` grâce à ```rust Node::to_process``` ;
++ la @turbofish, à @ref:nodify-example:turbofish, permet d'expliciter l'algorithme que l'on souhaite utiliser : en l'occurence, il s'agit de ```rust DFS``` ;
++ on applique le ```rust Process``` désiré à @ref:nodify-example:process : dans ce cas précis, ```rust Contains``` est utilisé.
+
 == Une meilleure implémentation
+
+#figure(
+  ```rust
+  pub fn delta_stepping<G, F, K, IsGoal>(
+    graph: G,
+    start: G::NodeId,
+    is_goal: IsGoal,
+    edge_cost: F,
+    delta: K,
+  ) -> Option<(K, Vec<G::NodeId>)>
+  where
+      G: IntoEdges + Visitable + Sync,
+      IsGoal: Fn(G::NodeId) -> bool + Sync,
+      G::NodeId: Eq + Hash + Send + Sync,
+      F: Fn(G::EdgeRef) -> K + Sync,
+      K: Div<Output = K> + Ord + Eq + Hash + PositiveMeasure + Send + Sync,
+  ```,
+
+  caption: [Signature de ```rust delta_stepping```],
+  placement: auto,
+  scope: "parent",
+) <ref:delta_stepping-signature>
+
+#figure(
+  ```rust
+  pub fn dijkstra<G, F, K>(
+    graph: G,
+    start: <G as GraphBase>::NodeId,
+    goal: Option<<G as GraphBase>::NodeId>,
+    edge_cost: F,
+  ) -> HashMap<<G as GraphBase>::NodeId, K>
+  where
+      G: IntoEdges + Visitable,
+      <G as GraphBase>::NodeId: Eq + Hash,
+      F: FnMut(<G as IntoEdgeReferences>::EdgeRef) -> K,
+      K: Measure + Copy,
+  ```,
+
+  caption: [Signature de ```rust dijkstra```],
+  placement: auto,
+  scope: "parent",
+) <ref:dijkstra-signature>
+
+En réalité, l'implémentation précédente s'est révélée assez peu pratique pour deux raisons principales :
++ la faible modularité avec du code existant,
++ l'outillage autour de la gestion de graphe est entièrement à la charge de @nodify.
+
+Pour cette raison, il a été décidé de fournir une autre implémentation, reposant cette fois-ci sur une @api déjà existante : il s'agit de la @crate @petgraph.
+@petgraph est une @crate, très connu dans le monde de Rust, qui fournit un ensemble d'outils de gestion, de recherche et de travaux divers sur des graphes.
+
+Les algorithmes de @nodify ont donc été retraduits comme une simple extension des algorithmes déjà existants dans la @crate.
+
+On peut remarquer les nombreuses similitudes entre @ref:delta_stepping-signature et @ref:dijkstra-signature : les deux signatures sont identiques à l'exception
+- du fait que ```rust delta_stepping``` préfère un prédicat plutôt qu'une cible,
+- que celui-ci ne retourne que les nœud les plus proches avec leur distance,
+- et qu'il nécessite un paramètre suplémentaire (```rust delta```)
+- ainsi que des contraintes en concurrence sur ses paramètres génériques.
 
 = Synthèse générale
 

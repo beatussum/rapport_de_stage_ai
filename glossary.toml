@@ -3,6 +3,11 @@ short = "ahash"
 group = "Rust"
 description = "Une @crate fournissant la fonction de hachage la plus rapide en Rust qui n'est toutefois pas cryptographiquement sécurisée."
 
+[api]
+short = "API"
+long = "Application Programming Interface"
+description = "En informatique, un ensemble d'entités qui fournit une façade à un logiciel pour interagir avec un autre."
+
 [benchmark]
 short = "test de performance"
 plural = "tests de performance"
@@ -59,6 +64,10 @@ short = "diviser pour régner"
 group = "Généralités sur la concurrence"
 description = "Technique algorithmique consistant à diviser le travail à effectuer en plusieurs sous-tâches (diviser), à résoudre récursivement ces sous-problèmes (régner) et à combiner, encore de manière récursive, les solutions obtenues pour former la solution du problème global."
 
+[fibonacci]
+short = "suite de Fibonacci"
+description = "Un suite de nombre entiers tirant son nom du mathématicien italien Fibonacci."
+
 [inria]
 short = "Inria"
 group = "Structure d'accueil"
@@ -87,6 +96,11 @@ description = "Il s'agit d'une mise en cache des valeurs de retour d'une fonctio
 [moore]
 short = "lois de Moore"
 description = "Ensemble de lois empiriques qui prédisent l'évolution de la puissance de calcul des processeurs."
+
+[nodify]
+short = "nodify"
+group = "Rust"
+description = "Une petite @crate fournissant des utilitaires pour explorer des graphes (optimisée par @rayon)."
 
 [lazy]
 short = "paresseux"
@@ -126,6 +140,11 @@ description = "Un fil (ou #emph[thread] en anglais) est la plus petite successio
 short = "trait"
 group = "Rust"
 description = "Il s'agit d'une entité permettant de définir un ensemble de fonctionnalités qu'un type possède et a en commun avec d'autres."
+
+[turbofish]
+short = "notation Turbofish"
+group = "Rust"
+description = "Notation permettant de lever une ambiguïté pour les spécialisations génériques."
 
 [uga]
 short = "U.G.A."

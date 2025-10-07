@@ -1,5 +1,8 @@
 download:
     ./get_ensimag_logo
 
-compile: download
+uml:
+    plantuml -tsvg uml/nodify.puml
+
+compile: download uml
     typst compile main.typ

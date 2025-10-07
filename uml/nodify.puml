@@ -1,0 +1,55 @@
+@startuml
+
+hide class members
+hide interface fields
+
+package nodify {
+	interface Node {
+		+fn outgoing(self) -> impl Iterator<Item = Self>
+		+fn to_process<P>(self) -> P
+	}
+
+	package process {
+		interface Process {
+			+type Node: Node
+			+fn from_node(node: Self::Node) -> Self
+		}
+
+		show Process fields
+
+		interface Contains {
+			+fn contains<P>(&self, pred: P) -> bool
+		}
+
+		interface FindAny {
+			+fn find_any<P>(&self, pref: P) -> Option<Self::Node>
+		}
+
+		interface FindFirst {
+			+fn find_first<P>(&self, pred: P) -> Option<Self::Node>
+		}
+
+		Node -u- Process
+		Contains --|> Process
+		FindAny --|> Process
+		FindFirst --|> Process
+
+		class DFS
+
+		DFS ..|> Contains
+		DFS ..|> FindAny
+
+		class DeltaStepping
+
+		DeltaStepping ..|> Contains
+		DeltaStepping ..|> FindAny
+		DeltaStepping ..|> FindFirst
+
+		class ParallelDFS
+
+		ParallelDFS ..|> Contains
+		ParallelDFS ..|> FindAny
+	}
+}
+
+@enduml
