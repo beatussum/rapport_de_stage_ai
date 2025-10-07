@@ -41,7 +41,7 @@ jobs:
         run: sudo apt-get install -qy fonts-texgyre
 
       - name: Install PlantUML
-        run: sudo ap-get install -qy plantuml
+        run: sudo apt-get install -qy plantuml
 
       - name: Setup typst
         id: setup-typst
