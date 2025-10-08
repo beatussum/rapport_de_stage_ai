@@ -59,6 +59,14 @@ short = "data race"
 group = "Généralités sur la concurrence"
 description = "Événement qui survient en programmation concurrente lorsque deux threads ou plus accèdent simultanément à une même variable partagée. Cet événement est souvent synonyme de bogue."
 
+[delta-stepping]
+short = "algorithme delta-stepping"
+description = "Un algorithme permettant de résoudre le problème du plus court chemin (ou @sssp) qui permet d'être implémenté de manière parallèle."
+
+[dijkstra]
+short = "algorithme de Dijkstra"
+description = "Un algorithme permettant de résoudre le problème du plus court chemin (ou @sssp), inventé par l'informaticien de même nom."
+
 [divide-and-conquer]
 short = "diviser pour régner"
 group = "Généralités sur la concurrence"
@@ -91,6 +99,7 @@ description = "Par convention, il s'agit d'un @trait dont le corps est vide et d
 
 [memoization]
 short = "mémoïsation"
+group = "Généralités sur la concurrence"
 description = "Il s'agit d'une mise en cache des valeurs de retour d'une fonction donnée afin d'éviter plusieurs évaluations pour des arguments identiques."
 
 [moore]

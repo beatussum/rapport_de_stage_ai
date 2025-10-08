@@ -1448,6 +1448,118 @@ On peut remarquer les nombreuses similitudes entre @ref:delta_stepping-signature
 - et qu'il nécessite un paramètre suplémentaire (```rust delta```)
 - ainsi que des contraintes en concurrence sur ses paramètres génériques.
 
+= @sssp
+
+À ce stade, on ne s'est intéressé qu'à la recherche d'existence de chemin : qu'en est-il donc de la recherche du plus court chemin (ou @sssp) ?
+
+On s'intéressera, dans un premier temps, aux limites de l'@dijkstra puis, dans un second temps, on présentera l'@delta-stepping.
+
+== Limites de l'approche classique
+
+L'@dijkstra, qui est un des algorithmes classiques les plus utilisés pour résoudre ce problème, est ici une mauvaise solution.
+En effet, l'@dijkstra repose sur l'accès à une pile en écriture @bib:dijkstra : pour des raisons de @data-race:pl, la parallélisation de cet algorithme est donc très laborieuse.
+
+Pour cette raison, l'approche parallèle repose sur l'utilisation d'un autre algorithme : l'@delta-stepping.
+
+== Approche parallèle
+
+Grossièrement, l'@delta-stepping repose sur la division de la pile de travail en plusieurs ensembles dans lesquels les sommets sont répartis en fonction de leur distance depuis le sommet de départ $s$. @bib:delta-stepping
+
+=== Notations
+
+On pose $B$ un tableau d'ensemble de sommets. @bib:delta-stepping
+
+On note $op("tent") (v)$, pour $v in V$, la distance #emph[tentative] d'un sommet ; à la fin de l'exécution de l'algorithme, $op("tent") (v) = op("dist") (v)$. @bib:delta-stepping
+
+On distingue deux types d'arrêtes distincts :
+- les arrêtes légères dont le poids est inférieur à $Delta$, et
+- les arrêtes lourdes dont le poids est strictement supérieur à $Delta$. @bib:delta-stepping
+
+@ref:delta-stepping-algorithm repose sur l'utilisation de plusieurs fonctions dont on détaillera le rôle et le fonctionnement dans les lignes suivantes. @bib:delta-stepping
+
+=== Fonctionnement interne
+
+#figure(
+  pseudocode-list[
+    + *fonction* $op("cherche_requêtes") (V', "type") -> #text[requêtes]$
+      + *retourne* ${(w, op("tent") (v) + c(v, w)) | v in V' and (v, w) in E_"type"}$
+    + *fin*
+  ],
+
+  caption: [Implémentation de $op("cherche_requêtes")$],
+) <ref:delta-stepping-algorithm:find-requests>
+
+@ref:delta-stepping-algorithm:find-requests permet de retrouver tout les voisins ainsi que leur distance #emph[tentative] pour un ensemble de sommets donnés et en fonction d'un type d'arrête donné. @bib:delta-stepping
+
+#figure(
+  pseudocode-list[
+    + *fonction* $op("relax_requêtes") ("Req")$
+      + *pour chaque* $(w, x) in "Req"$ *faire*
+        + $op("relax") (w, x)$
+      + *fin*
+    + *fin*
+  ],
+
+  caption: [Implémentation de $op("relax_requêtes")$],
+) <ref:delta-stepping-algorithm:relax-requests>
+
+@ref:delta-stepping-algorithm:relax-requests relaxe un ensemble de #emph[requêtes]. @bib:delta-stepping
+
+Le couple $(w, x)$ avec $w in V$ et $x$ sa potentielle nouvelle distance est appelé #emph[requête]. @bib:delta-stepping
+
+#figure(
+  pseudocode-list[
+    + *fonction* $op("relax") (w, x)$
+      + *si* $x < op("tent") (w)$ *alors*
+        + $B[floor((op("tent") (w)) / Delta)] := B[floor((op("tent") (w)) / Delta)] without {w}$
+        + $B[floor(x / Delta)] := B[floor(x / Delta)] union {w}$
+        + $op("tent") (w) := x$
+      + *fin*
+    + *fin*
+  ],
+
+  caption: [Implémentation de $op("relax")$],
+) <ref:delta-stepping-algorithm:relax>
+
+@ref:delta-stepping-algorithm:relax implémente un mécanisme #emph[relaxation] : si la distance donnée est meilleure que la distance courante, alors la première est sélectionné. @bib:delta-stepping
+
+On remarque également que le sommet relaxé est supprimé de son #emph[seau] pour être mis dans celui qui correspond à sa nouvelle distance#footnote[Il s'agit potentiellement du même.]. @bib:delta-stepping
+
+=== Algorithme final
+
+Avec les fonctions ci-dessus présentées, on peut décrire l'algorithme en tant que tel :
+
+#figure(
+  pseudocode-list[
+    + $E_"léger" := {(v, w) in E | c (v, w) <= Delta}$
+    + $E_"lourd" := {(v, w) in E | c (v, w) > Delta}$
+    + *pour chaque* $v in V$ *faire*
+      + $op("tent") (v) = infinity$
+    + *fin*
+    + $op("relax") (s, 0)$
+    + *tant que* $not op("est_vide") (B)$ *faire*
+      + $i := min {j >= 0 | B[j] != emptyset}$
+      + $R := emptyset$
+      + *tant que* $B[i] != emptyset$ *faire*
+        + $"Req" := op("cherche_requêtes") (B[i], "léger")$
+        + $R := R union B[i]$
+        + $B[i] := emptyset$
+        + $op("relax_requêtes") ("Req")$
+      + *fin*
+      + $"Req" := op("cherche_requêtes") (R, "lourd")$
+      + $op("relax_requêtes") ("Req")$
+    + *fin*
+  ],
+
+  caption: [Implémentation de l'@delta-stepping],
+) <ref:delta-stepping-algorithm>
+
+On remarque qu'il est assez facile de paralléliser cet algorithme : en effet, la boucle interne pourrait être parallèle si l'on revoyait $op("relax")$ pour que l'insertion dans $B[i]$ soit reportée après l'exécution de la boucle. @bib:delta-stepping
+
+=== Approche utilisée dans les @crate:pl proposées
+
+Dans les @crate:pl proposées, l'algorithme utilisé est un peu différent car on ne s'intéresse pas aux distances de l'ensemble des sommets mais uniquement d'un seul : on peut donc arrêter l'exécution précocément. @bib:nodify @bib:petgraph-paralgs-repo
+
 = Synthèse générale
 
 Il est dorénavant temps de faire le point sur ce stage dans l'équipe @datamove.
