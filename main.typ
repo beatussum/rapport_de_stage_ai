@@ -331,7 +331,7 @@ La conception actuelle des itérateurs parallèles a deux modes distincts :
  Il s'agit d'un fonctionnement similaire à un itérateur normal, mais avec une particularité : on peut diviser l'itérateur en deux pour produire des éléments disjoints dans des @thread:pl séparés.
 - #emph[push] (```rust Consumer``` et ```rust UnindexedConsumer```) : l'itérateur se voit donner chaque élément à tour de rôle, qui est ensuite traité.
  C'est l'inverse du fonctionnement d'un itérateur normal.
- Ce comportement pourrait être comparé à ```rust Iterator::for_each``` : chaque fois qu'un nouvel élément est produit, la méthode ```rust Folder::consume``` est appelée avec cet élément. @bib:rayon
+ Ce comportement pourrait être comparé à ```rust Iterator::for_each``` : chaque fois qu'un nouvel élément est produit, la méthode ```rust Folder::consume``` est appelée avec cet élément. @bib:rayon @bib:rayon-plumbing
 
 #figure(
   ```rust
@@ -351,11 +351,11 @@ Afin de mieux comprendre le fonctionnement de @rayon, on étudiera @ref:par-iter
 + cedit consommateur est remonté à l'itérateur de base ```rust FlatMap``` créé par ```rust ParallelIterator::flat_map``` qui enveloppe ```rust ForEachProducer``` dans un ```rust FlatMapProducer```,
 + on passe alors en mode #emph[pull] car ```rust Zip``` ne peut pas être implémenté en tant que consommateur car il doit être capable de coordonner deux itérateurs parallèles.
     + ```rust Zip``` créé un ```rust ZipProducer``` et le lie avec le consommateur remonté.
-    + Les producteurs des deux itérateurs #emph[zippés] sont alors générés. @bib:rayon
+    + Les producteurs des deux itérateurs #emph[zippés] sont alors générés. @bib:rayon @bib:rayon-plumbing
 
 En interne deux fonctions ont une importance capitale :
 - ```rust ParallelIterator::drive``` qui permet de lier un producteur à un consommateur avec la possibilité d'un découpage#footnote[Cette fonction est normalement à l'origine d'un appel à ```rust bridge``` qui implémente, dans les faits, le découpage en sous-tâches.], et
-- ```rust ParallelIterator::with_producer``` qui permet de transformer un itérateur en producteur. @bib:rayon
+- ```rust ParallelIterator::with_producer``` qui permet de transformer un itérateur en producteur. @bib:rayon @bib:rayon-plumbing
 
 == Algorithmes de graphe
 
@@ -1258,20 +1258,20 @@ Tout au long des lignes suivantes, on étudiera l'@api mis en place pour cette s
   scope: "parent",
 ) <ref:nodify-uml>
 
-Le principe de fonctionnement de cette @crate repose sur la généralisation de notion d'itérateurs : un itérateur sur le nœud d'un graphe n'a pas un seul successeur#footnote[```rust Iterator::next``` a pour valeur de retour un ```rust Option<Self::Item>```.] mais potentiellement une infinité.
+Le principe de fonctionnement de cette @crate repose sur la généralisation de notion d'itérateurs : un itérateur sur le nœud d'un graphe n'a pas un seul successeur#footnote[```rust Iterator::next``` a pour valeur de retour un ```rust Option<Self::Item>```.] mais potentiellement une infinité. @bib:nodify
 
-Ainsi, le @trait ```rust Node``` est, dans les faits, équivalent à ```rust Iterator``` à l'exception du fait que la méthode ```rust Node::outgoing``` ne retourne pas un successeur mais un itérateur sur les successeurs de ce nœud.
+Ainsi, le @trait ```rust Node``` est, dans les faits, équivalent à ```rust Iterator``` à l'exception du fait que la méthode ```rust Node::outgoing``` ne retourne pas un successeur mais un itérateur sur les successeurs de ce nœud. @bib:nodify
 
 ```rust Node``` fonctionne de pair avec ```rust Process``` qui, quant à lui, traduit les opérations supportées pour un algorithme donné.
 À l'heure actuelle, il existe trois opérations différentes, qui sont implémentés par un @trait :
 - ```rust Contains``` qui permet de savoir si un graphe contient un nœud vérifiant un prédicat donné ;
 - ```rust FindAny``` qui permet d'obtenir un nœud vérifiant un prédicat ;
-- ```rust FindFirst``` qui permet d'obtenir le premier nœud vérifiant un prédicat#footnote[Pour un graphe pondéré seulement, il s'agit du plus court chemin.].
+- ```rust FindFirst``` qui permet d'obtenir le premier nœud vérifiant un prédicat#footnote[Pour un graphe pondéré seulement, il s'agit du plus court chemin.]. @bib:nodify @bib:nodify-repo
 
 Ces trois processus sont implémentés par trois algorithmes :
 - ```rust DFS``` qui repose sur @ref:dfs-algorithm,
 - ```rust ParallelDFS``` sur @ref:par-dfs-algorithm, et
-- ```rust DeltaStepping``` sur TODO.
+- ```rust DeltaStepping``` sur TODO. @bib:nodify @bib:nodify-repo
 
 L'utilisation de ```rust Node::to_process``` s'appuie sur une spécialisation de la méthode à l'aide de la @turbofish, notation un peu singulière qui justifie que l'on s'y attarde un peu.
 
@@ -1296,7 +1296,7 @@ En effet, Rust vise à avoir une grammaire non contextuelle afin de simplifier s
 
 @ref:turbofish montre une ambiguïté :
 - ```rust (the<guardian, stands>(resolute))``` peut être interprété comme un appel spécialisé à la fonction ```rust fn the<'a, A, B>(&'a str) -> (bool, bool)``` ;
-- ou ```rust the<guardian``` et ```rust stands>(resolute)``` peuvent être interprétés comme deux comparaisons.
+- ou ```rust the<guardian``` et ```rust stands>(resolute)``` peuvent être interprétés comme deux comparaisons. @bib:turbofish
 
 Ainsi, la @turbofish, avec l'ajout de deux `:`, permet de lever cette ambiguïté.
 
@@ -1378,7 +1378,7 @@ Ainsi, la @turbofish, avec l'ajout de deux `:`, permet de lever cette ambiguït�
   scope: "parent",
 ) <ref:nodify-example>
 
-@ref:nodify-example illustre un cas très simple d'utilisation de @nodify : le but est de vérifier si une valeur donnée est atteinte dans la @fibonacci.
+@ref:nodify-example illustre un cas très simple d'utilisation de @nodify : le but est de vérifier si une valeur donnée est atteinte dans la @fibonacci. @bib:nodify-repo
 
 On implémente une structure nœud représentant la valeur courante de la @fibonacci et qui sauvegarde également la valeur précédente afin d'être capable de générer la suivante.
 
