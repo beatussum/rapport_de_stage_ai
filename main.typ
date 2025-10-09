@@ -16,11 +16,6 @@
   fig
 }
 
-#show link: it => {
-  set text(fill: gray)
-  it
-}
-
 #show: codly-init.with()
 
 #codly(
