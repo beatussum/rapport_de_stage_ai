@@ -7,6 +7,7 @@
 #import "@preview/diagraph:0.3.6": raw-render
 #import "@preview/glossy:0.8.0": glossary, init-glossary, theme-compact
 #import "@preview/lovelace:0.3.0": pseudocode-list
+#import "@preview/unify:0.7.1": qty
 
 #show: init-glossary.with(toml("glossary.toml"), show-term: emph)
 
@@ -1227,13 +1228,68 @@ Au cours des lignes suivantes, on étudiera deux configurations précises :
 - @ref:split-graph représente une configuration de $G$ dans laquelle le graphe fait apparaître plusieurs #emph[composantes connexes] ;
 - quant à elle, @ref:dense-graph illustre une configuration où les sommets sont très interconnectés.
 
-== Configuration avec composantes connexes
+== @benchmark:pl:cap
 
-TODO
+=== Configuration avec composantes connexes <ref:bench:split>
 
-== Configuration avec graphe dense
+#figure(
+  image("benches/par_dfs/split.svg"),
+  caption: [@benchmark:cap du DFS parallèle],
+) <ref:bench:split:par-dfs>
 
-TODO
+@ref:bench:split:par-dfs montre que l'entrée du @benchmark est résolu, en moyenne, en #qty("1,6142", "ms") avec un écart-type de #qty("63,048", "us").
+
+#figure(
+  image("benches/par_iter/split.svg"),
+  caption: [@benchmark:cap de l'algorithme à itérateur parallèle],
+) <ref:bench:split:par-iter>
+
+@ref:bench:split:par-iter montre que l'entrée du @benchmark est résolu, en moyenne, en #qty("2,2990", "ms") avec un écart-type de #qty("20,181", "us").
+
+On remarque donc que le DFS parallèle est sensiblement meilleur, de l'ordre de #qty("30", "percent"), que la solution utilisant ```rust walk_tree```.
+
+=== Configuration avec graphe dense <ref:bench:dense>
+
+Une configuration tel que dans @ref:dense-graph correspond à une situation où la rivière est recouverte entièrement de pierres.
+
+#figure(
+  image("benches/par_dfs/dense.svg"),
+  caption: [@benchmark:cap du DFS parallèle],
+) <ref:bench:dense:par-dfs>
+
+@ref:bench:dense:par-dfs montre que l'entrée du @benchmark est résolu, en moyenne, en #qty("1,2555", "ms") avec un écart-type de #qty("66,830", "us").
+
+#figure(
+  image("benches/par_iter/dense.svg"),
+  caption: [@benchmark:cap de l'algorithme à itérateur parallèle],
+) <ref:bench:dense:par-iter>
+
+@ref:bench:dense:par-iter montre que l'entrée du @benchmark est résolu en #qty("40,350", "us") avec un écart-type de #qty("2,0626", "us").
+
+On remarque donc que le DFS parallèle est sensiblement meilleur, de l'ordre de #qty("30", "percent"), que la solution utilisant ```rust walk_tree```.
+
+Dans ce cas, on remarque donc que le DFS parallèle est bien plus mauvais, de l'ordre de #qty("3000", "percent"), que la solution utilisant ```rust walk_tree```.
+
+== Analyse
+
+Bien que pour la première batterie de @benchmark:pl en @ref:bench:split est concluante car elle montre l'efficacité du DFS parallèle développé ; la seconde en @ref:bench:dense a un résultat extrêmement mauvais.
+
+En effet, dans le premier cas, la division du travail à effectuer est plus équitable car dynamique : cela correspond à ce que l'on pouvait intuitivement attendre.
+
+A contrario, dans le second cas, la solicitation extrême, montrée par @flamegraph, implique un synchronisme en mémoire excessif et donc un ralentissement net.
+
+Il n'a pas été possible de résoudre ce problème au cours du stage bien que plusieurs solutions aient été tentées :
+- maitient de deux tables de hachage, une concurrente et l'autre non, en essayant de minimiser, d'une part, la réplication de données et, d'autre part, les écritures concurrentes ;
+- comme précédemment mais avec d'autres heuristiques : en d'autres termes, on alterne entre les deux tables :
+  - au bout d'un nombre donné d'itération,
+  - aléatoirement,
+  - lorsque le sommet a de nombreux successeurs ;
+- changement de la valeur du seuil séquentiel ```rust threshold``` avec
+  - plusieurs valeurs statiques différentes,
+  - valeur dynamique selon plusieurs critères de variation ;
+- changement de fonction de hachage afin de limiter les collisions.
+
+Malheuresement, comme aucunes des tentatives précédentes n'a été courroné de succès, on peut donc conclure que la solution apportée n'est pertinente que pour certaines configurations bien précises, et que le choix de la solution utilisée revient à l'utilisateur.
 
 = Généricité
 

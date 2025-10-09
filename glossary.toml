@@ -76,6 +76,10 @@ description = "Technique algorithmique consistant à diviser le travail à effec
 short = "suite de Fibonacci"
 description = "Un suite de nombre entiers tirant son nom du mathématicien italien Fibonacci."
 
+[flamegraph]
+short = "flamegraph"
+description = "Une visualisation de données hiérarchiques pour visualiser les traces de pile des logiciels profilés."
+
 [inria]
 short = "Inria"
 group = "Structure d'accueil"
