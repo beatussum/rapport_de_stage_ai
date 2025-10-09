@@ -55,7 +55,7 @@
 
     Dans un premier temps, il a été possible d'explorer l'intérêt du développement de ce type d'outils au travers d'un problème @leetcode. Durant cette phase de prototypage, on a pu constater les avantages apportés par une programmation parallèle ainsi que ses limites.
 
-    À l'issue de la phase précédente, on a pu développé une @crate fournissant une interface générique et permettant donc la résolution parallèle de problème faisant appel à des grahes.
+    À l'issue de la phase précédente, on a pu développer une @crate fournissant une interface générique et permettant donc la résolution parallèle de problème faisant appel à des graphes.
 
     Enfin, afin d'accroître l'utilisabilité des algorithmes précédemment établis, on a pu concevoir une autre @crate s'interfaçant avec @petgraph.
   ],
@@ -63,7 +63,7 @@
     "algorithmes de graphes",
     "algorithmes parallèles",
     "ENSIMAG",
-    "parallélisme de donnée",
+    "parallélisme de données",
     "rapport de stage",
   ),
   bibliography: bibliography("refs.bib"),
@@ -78,7 +78,7 @@ Ce stage s'est tenu au sein de l'équipe @datamove au @lig.
 
 Le @lig est un laboratoire de recherche qui, malgré son nom, se situe à Saint-Martin-d'Hères.
 Il s'agit d'un établissement public dont la direction est partagée entre l'@uga, l'@inria et le @cnrs.
-Ce laboratoire a été fondé en 2007 avec la mission d'accroître l'efficacité de la recherche en informatique : en effet, le regroupement de plusieurs équipes de spécialisation diverse vise à augmenter les collaborations transversales et le développement de projets interdisciplinaires. @bib:lig
+Ce laboratoire a été fondé en 2007 avec la mission d'accroître l'efficacité de la recherche en informatique : en effet, le regroupement de plusieurs équipes de spécialisations diverses vise à augmenter les collaborations transversales et le développement de projets interdisciplinaires. @bib:lig
 
 Parmis les équipes du @lig, @datamove a pour sujet d'étude #quote[le mouvement de données pour le calcul haute performance].
 En effet, pour les supercalculateurs, la bonne gestion du mouvement de donnée est un enjeu de taille : celui-ci représente, dans les faits, l'une des premières causes de ralentissement.
@@ -94,7 +94,7 @@ D'une part, une multitude de problèmes se résolvent à l'aide d'algorithmes su
 
 D'autre part, depuis les alentours des années 2000, les @moore, qui prédisaient l'augmentation constante de la puissance de calcul des processeurs, ne sont plus vérifiées.
 En effet, les fabricants commencent depuis quelques années à atteindre les limites physiques.
-De cette façon, l'augmentation des performances d'un algorithme ne vient plus, de nos jours, de l'utilisation d'un processeur ayant une fréquence d'horloge plus élevée, mais de la capacité à exploiter aux mieux ses unités de calcul : en d'autres termes, l'enjeu principal est devenu la parallélisation. @bib:sutter
+De cette façon, l'augmentation des performances d'un algorithme ne vient plus, de nos jours, de l'utilisation d'un processeur ayant une fréquence d'horloge plus élevée, mais de la capacité à exploiter au mieux ses unités de calcul : en d'autres termes, l'enjeu principal est devenu la parallélisation. @bib:sutter
 
 Ansi, bien que de nombreux algorithmes séquentiels existent, ceux dont l'éxécution est parallélisable sont devenus particulièrement intéressants.
 
@@ -135,7 +135,7 @@ Par exemple, une fenêtre graphique doit rester réactive pendant le télécharg
 
 Il est important de noter que la clef de voûte de ce concept est l'utilisation d'un ordonnanceur (ou #emph[scheduler]) : il s'agit d'un programme permettant de gérer l'exécution de tâches dont il détermine l'ordre et la durée d'exécution.
 Un mécanisme de changement de contexte (ou #emph[context switch]) permet de basculer sur une autre tâche alors que la précédente n'est pas forcément terminée.
-De cette façon, un programme asynchrone #emph[peut] être exécuté de manière parallèles, mais #emph[ne doit pas nécessairement] l'être.
+De cette façon, un programme asynchrone #emph[peut] être exécuté de manière parallèle, mais #emph[ne doit pas nécessairement] l'être.
 
 Bien que Rust offre des fonctionnalités intéressantes aussi bien en parallèlisme qu'en asynchronisme, c'est bien le premier qui nous intéressera ici.
 
@@ -188,7 +188,7 @@ Afin de garantir une sécurité mémoire, Rust introduit deux concepts novateurs
 #[
 Le principe est le suivant :
 - Chaque variable a un unique propriétaire.
-- Il ne peux y avoir qu'une seule référence mutable ou#footnote[La langue française étant ambigüe, il s'agit ici d'un #quote[ou] exclusif.] d'un nombre quelconque de référence immutable.
+- Il ne peux y avoir qu'une seule référence mutable ou#footnote[La langue française étant ambigüe, il s'agit ici d'un #quote[ou] exclusif.] un nombre quelconque de références immutables.
 - Les références doivent toujours être valides. @bib:the-rust-programming-language
 ] <ref:borrow-rules>
 
@@ -235,7 +235,7 @@ Dans le cas de @ref:reference_scope_ko, ```rust b``` et ```rust c``` sont simult
 
 Parfois, il n'est pas possible de vérifier statiquement les #link(<ref:borrow-rules>)[règles d'emprunt] ; on peut, par exemple, imaginer l'utilisation d'une ressource créée dynamiquement et partagée en écriture.
 
-On utilise alors un mécanisme de #emph[mutabilité intérieure] afin de vérifier que les #link(<ref:borrow-rules>)[règles précédentes] sont toujours vérifiée. @bib:the-rust-programming-language @bib:the-rust-standard-library
+On utilise alors un mécanisme de #emph[mutabilité intérieure] afin de vérifier que les #link(<ref:borrow-rules>)[règles précédentes] sont toujours vérifiées. @bib:the-rust-programming-language @bib:the-rust-standard-library
 
 #figure(
   ```rust
@@ -256,7 +256,7 @@ On utilise alors un mécanisme de #emph[mutabilité intérieure] afin de vérifi
 
 Dans @ref:interior-mutability, on peut voir que, malgré l'immutabilité de ```rust a```, on est capable de modifier son contenu.
 
-Statiquement, les #link(<ref:borrow-rules>)[règles d'emprunt] sont toujours vérifiées (```rust a``` est immutable) ; mais, le contenu de la #emph[cellule] est gérée dynamiquement à l'aide des méthodes ```rust RefCell::borrow``` et ```rust RefCell::borrow_mut```. @bib:the-rust-programming-language @bib:the-rust-standard-library
+Statiquement, les #link(<ref:borrow-rules>)[règles d'emprunt] sont toujours vérifiées (```rust a``` est immutable) ; mais, le contenu de la #emph[cellule] est géré dynamiquement à l'aide des méthodes ```rust RefCell::borrow``` et ```rust RefCell::borrow_mut```. @bib:the-rust-programming-language @bib:the-rust-standard-library
 
 Ainsi, même quand les #link(<ref:borrow-rules>)[règles d'emprunt] ne peuvent pas êtres vérifiées statiquement, Rust permet leur validation de manière dynamique grâce à certains types spécialisés.
 
@@ -265,7 +265,7 @@ Ainsi, même quand les #link(<ref:borrow-rules>)[règles d'emprunt] ne peuvent p
 Pour l'instant, on s'est intéressé au cas de la programmation synchrone.
 Que se passe-t-il alors lorque l'on souhaite utiliser plusieurs @thread:pl ?
 
-Afin d'être capable de discriminer les types qui peuvent être utiliser de manière concurrente introduit les @marqueur:pl ```rust Send``` et ```rust Sync```. @bib:the-rust-standard-library
+Afin d'être capable de discriminer les types qui peuvent être utilisé de manière concurrente, on introduit les @marqueur:pl ```rust Send``` et ```rust Sync```. @bib:the-rust-standard-library
 
 ```rust Send``` assure qu'un type peut être envoyé d'un @thread à un autre sans problème. @bib:the-rust-standard-library
 
@@ -286,16 +286,16 @@ Afin d'être capable de discriminer les types qui peuvent être utiliser de mani
 ) <ref:send-vs-sync>
 
 Dans @ref:send-vs-sync, on peut constater que ```rust Cell``` est ```rust Send```#footnote[Cela s'explique par le fait que ```rust bool``` est ```rust Send```.] mais pas ```rust Sync```.
-En effet, une instance ```rust Cell``` détient seule la ressource qu'elle gère ; ainsi, celle-ci peut être déplacer#footnote[```rust move```] sans problème : ```rust Cell``` est donc bien ```rust Send```. A contrario, du fait du mécanisme de mutabilité intérieure, la transférer par référence induirait l'existence de deux accès mutable sur ```rust a``` en même temps du fait du parallèlisme : ```rust Cell``` n'est donc pas ```rust Sync```. @bib:the-rust-standard-library
+En effet, une instance ```rust Cell``` détient seule la ressource qu'elle gère ; ainsi, celle-ci peut être déplacée#footnote[```rust move```] sans problème : ```rust Cell``` est donc bien ```rust Send```. A contrario, du fait du mécanisme de mutabilité intérieure, la transférer par référence induirait l'existence de deux accès mutables sur ```rust a``` en même temps du fait du parallèlisme : ```rust Cell``` n'est donc pas ```rust Sync```. @bib:the-rust-standard-library
 
 Grâce à tous les mécanismes expliqués dans les sections précédentes, il est possible d'affirmer que Rust est un langage qui facilite l'écriture concurrente dans le sens où celui-ci est capable d'empêcher les @data-race:pl. @bib:the-rust-programming-language @bib:the-rust-standard-library
 
 === @rayon
 
-@rayon est une @crate fournissant une interface de haut niveau pour la gestion de tâche parallèles.
+@rayon est une @crate fournissant une interface de haut niveau pour la gestion de tâches parallèles.
 Elle s'appuie sur le principe du @divide-and-conquer et du @work-stealing.
 
-Elle peut être utiliser de deux manières différentes :
+Elle peut être utilisée de deux manières différentes :
 - une interface de haut niveau à proprement parler qui repose, entre autre, sur des itérateurs parallèles ;
 - alternativement, il est possible de découper le travail à effectuer à l'aide de fonctions et structures mis à disposition. @bib:rayon
 
@@ -320,9 +320,9 @@ De manière générale, une méthode du @trait ```rust Iterator``` a son équiva
 
 Les itérateurs parallèles sont plus complexes que les itérateurs séquentiels car ils doivent pouvoir se diviser et fonctionner en parallèle sur les deux moitiés.
 La conception actuelle des itérateurs parallèles a deux modes distincts :
-- #emph[pull] (dont les traits ```rust Producer``` et ```rust UnindexedProducer``` permettent d'implémenter ce comportement) : l'itérateur est demandé de produire l'élément suivant en utilisant un appel à ```rust ParallelIterator::next```.
+- #emph[pull] (dont les traits ```rust Producer``` et ```rust UnindexedProducer``` permettent d'implémenter ce comportement) : on demande à l'itérateur est demandé de produire l'élément suivant en utilisant un appel à ```rust ParallelIterator::next```.
  Il s'agit d'un fonctionnement similaire à un itérateur normal, mais avec une particularité : on peut diviser l'itérateur en deux pour produire des éléments disjoints dans des @thread:pl séparés.
-- #emph[push] (```rust Consumer``` et ```rust UnindexedConsumer```) : l'itérateur se voit donner chaque élément à tour de rôle, qui est ensuite traité.
+- #emph[push] (```rust Consumer``` et ```rust UnindexedConsumer```) : l'itérateur donne chaque élément à tour de rôle, qui est ensuite traité.
  C'est l'inverse du fonctionnement d'un itérateur normal.
  Ce comportement pourrait être comparé à ```rust Iterator::for_each``` : chaque fois qu'un nouvel élément est produit, la méthode ```rust Folder::consume``` est appelée avec cet élément. @bib:rayon @bib:rayon-plumbing
 
@@ -341,7 +341,7 @@ La conception actuelle des itérateurs parallèles a deux modes distincts :
 
 Afin de mieux comprendre le fonctionnement de @rayon, on étudiera @ref:par-iter-execution-example dont l'exécution se lit de bas en haut et commence donc par
 + la création du consommateur final (```rust ForEachProducer```) par ```rust ParallelIterator::for_each```,
-+ cedit consommateur est remonté à l'itérateur de base ```rust FlatMap``` créé par ```rust ParallelIterator::flat_map``` qui enveloppe ```rust ForEachProducer``` dans un ```rust FlatMapProducer```,
++ ce consommateur est remonté à l'itérateur de base ```rust FlatMap``` créé par ```rust ParallelIterator::flat_map``` qui enveloppe ```rust ForEachProducer``` dans un ```rust FlatMapProducer```,
 + on passe alors en mode #emph[pull] car ```rust Zip``` ne peut pas être implémenté en tant que consommateur car il doit être capable de coordonner deux itérateurs parallèles.
     + ```rust Zip``` créé un ```rust ZipProducer``` et le lie avec le consommateur remonté.
     + Les producteurs des deux itérateurs #emph[zippés] sont alors générés. @bib:rayon @bib:rayon-plumbing
@@ -372,7 +372,7 @@ En interne deux fonctions ont une importance capitale :
 ) <ref:graph>
 
 Nombre de problèmes peuvent être ramenés à une représentation sous la forme de graphe.
-Dès que le modèle étudié admet plusieurs entités ayant des relations plus ou moins complexe, la représentation de celui-ci sous la forme d'un graphe peut être pertinente.
+Dès que le modèle étudié admet plusieurs entités ayant des relations plus ou moins complexes, la représentation de celui-ci sous la forme d'un graphe peut être pertinente.
 
 On se focalisera ici sur deux algorithmes en particulier.
 
@@ -382,7 +382,7 @@ On se focalisera ici sur deux algorithmes en particulier.
   table(
     columns: range(7).map(_ => auto),
     table.header([*Sommets*], $a$, $b$, $c$, $d$, $e$, $f$),
-    [*Plus court chemin depuis $a$*], $0$, $1$, $10$, $11$, $5$, $17$,
+    [*Plus court chemin depuis $a$*], $0$, $1$, $10$, $11$, $5$, $12$,
   ),
 
   caption: [Plus court chemins dans pour @ref:graph],
@@ -390,11 +390,11 @@ On se focalisera ici sur deux algorithmes en particulier.
 
 Dans un graphe pondéré, la recherche du plus court chemin consiste à trouver le chemin séparant un sommet d'un autre dont la somme des poids est minimale.
 
-Il s'agit d'un problème très usuel dont la résolution est utile dans beaucoup de domaines tels que dans le transport, la logistique et la livraison, la télécommunication, etc.. Celui-ci admet plusieurs algorithmes de résolution qui peuvent se classer en deux catégorie distinctes :
+Il s'agit d'un problème très usuel dont la résolution est utile dans beaucoup de domaines tels que dans le transport, la logistique et la livraison, la télécommunication, etc.. Celui-ci admet plusieurs algorithmes de résolution qui peuvent se classer en deux catégories distinctes :
 - la recherche à partir d'un sommet donné (ou @sssp) où l'on détermine la distance minimale séparant un sommet d'origine de tous les autres ;
 - la recherche pour tous les couples de sommets où l'on s'intéresse cette fois à tous les couples $(s ; t) in V$. @bib:cormen
 
-Au cours du développement suivant, seule la première catégorie d'algorithme sera abordée.
+Au cours du développement suivant, seule la première catégorie d'algorithmes sera abordée.
 
 === Recherche d'existence de chemin
 
@@ -402,25 +402,25 @@ Dans certains cas, il n'est pas nécessaire de rechercher le chemin optimal en p
 Ce problème peut être réduit à un parcours de graphe avec une fin d'exécution potentiellement prématurée.
 Il existe deux algorithmes principaux de parcours de graphe :
 - celui de parcours en largeur où l'on va explorer le graphe niveau par niveau ;
-- celui de parcours en profondeur où, quant à lui, on va explorer chaque de sucesseur en successeur jusqu'à un sommet sans sucesseur. @bib:cormen
+- celui de parcours en profondeur où, quant à lui, on va explorer de sucesseur en successeur jusqu'à un sommet sans sucesseur. @bib:cormen
 
 Au cours de cette étude, on s'intéressera au parcours en profondeur.
 
-De cette façon, il a été possible d'explorer la notion de programmation concurrente et les raisons qui rendent le Rust un langage adéquat à ce type de programmation, enfin, on a pu succinctement présenter les deux algorithmes que l'on étudiera dans ce papier.
+De cette façon, il a été possible d'explorer la notion de programmation concurrente et les raisons qui rendent le Rust un langage adapté à ce type de programmation, enfin, on a pu succinctement présenter les deux algorithmes que l'on étudiera dans ce document.
 
 = Cas pratique
 
-Dans un premier temps, on s'intéressera à un petit problème d'informatique faisant intervenir un algorithme sur graphe que l'on cherchera, dans les sections ultérieures, à optimiser au maximum en faisant l'usage notamment de travail parallèle.
+Dans un premier temps, on s'intéressera à un petit problème d'informatique faisant intervenir un algorithme sur graphe que l'on cherchera, dans les sections ultérieures, à optimiser au maximum en faisant l'usage notamment de traitement parallèle.
 
 @leetcode est une plateforme de problèmes d'informatique en ligne.
-Celle-ci est souvent utilisé lors des @technical-interview:pl.
+Celle-ci est souvent utilisée lors des @technical-interview:pl.
 On étudiera ici un problème qui provient de cette plateforme.
 
 Après une présentation exhaustive du problème, on étudiera les différentes solutions séquentielles développées.
 
 == Présentation du problème
 
-#emph[Frog jump] est un problème @leetcode avec le niveau de difficulté #emph[hard], le plus élevée de la plateforme.
+#emph[Frog jump] est un problème @leetcode avec le niveau de difficulté #emph[hard], le plus élevé de la plateforme.
 Ses étiquettes sont #emph[tableau] et #emph[programmation dynamique]. @bib:frog-jump <ref:frog-jump-intro>
 
 #quote(block: true)[
@@ -429,7 +429,7 @@ Ses étiquettes sont #emph[tableau] et #emph[programmation dynamique]. @bib:frog
   Les caractéristiques de la rivière sont données en entrée.
   La grenouille ne peut que sauter aux endroits où une pierre est présente.
 
-  La grenouille, en partant de la première pierre, doit sauter de pierre pour atteindre l'autre rive qui correspond à la dernière position où se trouve également une pierre.
+  La grenouille, en partant de la première pierre, doit sauter de pierre en pierre pour atteindre l'autre rive qui correspond à la dernière position où se trouve également une pierre.
 
   La taille du saut de la grenouille est égale à sa vitesse $v_k in NN^*$ où $k in NN$ correspond à l'indice du saut.
 
@@ -491,7 +491,7 @@ On propose trois solutions séquentielles différentes :
 
 On étudiera les différentes approches en notant leurs avantages et leurs inconvénients.
 
-Au cours des sections suivantes, on notera $T_s (n)$ (resp. $E_s (n)$) la complexité temporelle (resp. spatialle) dans une situation $s in {"meilleur", "pire"}$ et pour un échantillon de donnée de taille $n >= 2$.
+Au cours des sections suivantes, on notera $T_s (n)$ (resp. $E_s (n)$) la complexité temporelle (resp. spatiale) dans une situation $s in {"meilleur", "pire"}$ et pour un échantillon de donnée de taille $n >= 2$.
 
 === Parcours en profondeur
 
@@ -570,11 +570,11 @@ Au cours des sections suivantes, on notera $T_s (n)$ (resp. $E_s (n)$) la comple
   scope: "parent",
 ) <ref:dfs-algorithm>
 
-Pour @ref:dfs-algorithm, il s'agit tout d'un parcours en profondeur sur le graphe $G$ défini plus haut, bien que celui-ci soit généré de manière @lazy[paresseuse], en partant du sommet $(p = 0, v = 1)$ et que celui-ci dispose d'un arrêt potentiellement précoce, soit dès que l'on trouve un $v in [|1, n|]$ tel que $(p = n - 1, v = v)$ soit atteint.
+Pour @ref:dfs-algorithm, il s'agit d'un parcours en profondeur sur le graphe $G$ défini plus haut, bien que celui-ci soit généré de manière @lazy[paresseuse], en partant du sommet $(p = 0, v = 1)$ et que celui-ci dispose d'un arrêt potentiellement précoce, soit dès que l'on trouve un $v in [|1, n|]$ tel que $(p = n - 1, v = v)$ soit atteint.
 
 En Rust, comme dans de nombreux autres langages de programmation, les opérateurs binaires sont @lazy; ainsi, à la ligne @ref:dfs-algorithm:bin-ops, l'ordre des opérandes est très importante : on procède par coût croissant. De cette façon, on effectue
 + une comparaison sur entier dont le coût est négligeable, puis
-+ un accès sur un tableau qui plus coûteux car on a une indirection supplémentaire à traiter, et enfin
++ un accès sur un tableau qui est plus coûteux car on a une indirection supplémentaire à traiter, et enfin
 + un accès à la table de hachage étant donné le coût non négligeable de la fonction de hâchage et des coûts internes de la table.
 
 Le meilleur cas correspond à une situation dans laquelle on montre l'existence du chemin en ne parcourant qu'une seule #emph[branche] du graphe ; au contraire, la pire est celle qui oblige le parcours entier de $G$.
@@ -955,7 +955,7 @@ On commencera par étudier les réponses apportées aux deux problématiques pr�
   caption: [Exécution d'une itération de @ref:stack-algorithm pour $n = 3$],
 ) <ref:stack-algorithm-example>
 
-Afin d'éviter de devoir à partager en écriture une pile, on procédera par réductions successives dont l'algorithme général @ref:stack-algorithm.
+Afin d'éviter de devoir partager en écriture une pile, on procédera par réductions successives dont l'algorithme général @ref:stack-algorithm.
 
 #figure(
   pseudocode-list[
@@ -977,7 +977,7 @@ De cette façon, l'écriture se fait à l'intérieur de chaque @thread et on ne 
 Ce choix d'implémentation permet de ne ne pas trop s'éloigner du fonctionnement de @ref:dfs-algorithm et assure ainsi un certain comportement.
 En effet, on remarque que les piles locales sont replacées dans le même ordre que pour leur prélévement : la configuration de la pile globale, après parcours en profondeur partiel, est relativement semblable à celle de @ref:dfs-algorithm pour une itération.
 
-On note que @ref:stack-algorithm est volontairement simplifié : celui-ci ne fait pas mention de la gestion d'arrêt prématurée : cette fonctionnalité est géré par la méthode ```rust ParallelIterator::try_fold``` de @rayon. @bib:rayon
+On note que @ref:stack-algorithm est volontairement simplifié : celui-ci ne fait pas mention de la gestion d'arrêt prématuré : cette fonctionnalité est gérée par la méthode ```rust ParallelIterator::try_fold``` de @rayon. @bib:rayon
 
 === La collection associative
 
@@ -1083,7 +1083,7 @@ Cette dernière offre de très bonnes performances en contrepartie de quoi elle 
 ) <ref:partial-dfs-algorithm>
 
 @ref:dfs-algorithm:stack requiert l'utilisation d'un algorithme permettant un parcours en profondeur partiel avec possibilité d'arrêt précoce.
-Par #quote[partiel], on entend que la boucle principale n'effectue qu'un nombre d'itérations fixé; et, par #quote[possibilité d'arrêt précoce], on décrit la possibilité d'arrêter l'algorithme le plus rapidement possible à partir du moment où on à trouver un sommet tel que, pour un $v in [|1, n|]$, le sommet $(n - 1, v)$ est atteint.
+Par #quote[partiel], on entend que la boucle principale n'effectue qu'un nombre d'itérations fixé; et, par #quote[possibilité d'arrêt précoce], on décrit la possibilité d'arrêter l'algorithme le plus rapidement possible à partir du moment où on a trouvé un sommet tel que, pour un $v in [|1, n|]$, le sommet $(n - 1, v)$ est atteint.
 
 Cet algorithme est présenté en @ref:partial-dfs-algorithm.
 
@@ -1156,7 +1156,7 @@ En cas de découverte d'un #emph[sommet de fin] @ref:partial-dfs-algorithm:29, o
 
 @rayon offre une autre approche, plus facile de mise en place, grâce à la fonction ```rust walk_tree```.
 Celle-ci automatise la construction d'un ```rust ParallelIterator``` en prenant la racine d'un arbre et une @closure qui génère les successeurs (sous la forme d'un ```rust IntoIterator```). @bib:the-rust-standard-library @bib:rayon
-Il existe une petite suptilité car on travaille sur un graphe et non arbre : il faut donc @capture[capturer] une table de hachage qui doit donc être, comme pour @ref:par-dfs-algorithm, concurrente afin de retenir les sommets déjà exploré.
+Il existe une petite suptilité car on travaille sur un graphe et non un arbre : il faut donc @capture[capturer] une table de hachage qui doit donc être, comme pour @ref:par-dfs-algorithm, concurrente afin de retenir les sommets déjà explorés.
 
 Une fois le ```rust ParallelIterator``` créé avec ```rust walk_tree```, il est possible d'appeler ```rust ParallelIterator::find_any``` afin de chercher, pour n'importe quel $v in [|1, n|]$, le sommet $(n - 1, v)$.
 On applique ensuite ```rust Option::is_some``` afin de vérifier s'il existe un pareil sommet dans la composante connexe enracinnée en $(0, 1)$. @bib:the-rust-standard-library @bib:rayon
@@ -1221,7 +1221,7 @@ On applique ensuite ```rust Option::is_some``` afin de vérifier s'il existe un 
   caption: [Configuration avec graphe dense],
 ) <ref:dense-graph>
 
-Au cours des sections précédentes, il a été possible d'établir deux algorithmes parallèles dont le principe de fonctionnant diffère : les performances obtenues sont donc variables suivant la configuration du graphe $G$ en entrée.
+Au cours des sections précédentes, il a été possible d'établir deux algorithmes parallèles dont le principe de fonctionnement diffère : les performances obtenues sont donc variables suivant la configuration du graphe $G$ en entrée.
 En d'autres termes, il a été possible, pour chacun des deux algorithmes, d'identifier une configuration dans laquelle l'algorithme en question se comporte bien.
 
 Au cours des lignes suivantes, on étudiera deux configurations précises :
@@ -1317,7 +1317,7 @@ Le principe de fonctionnement de cette @crate repose sur la généralisation de 
 Ainsi, le @trait ```rust Node``` est, dans les faits, équivalent à ```rust Iterator``` à l'exception du fait que la méthode ```rust Node::outgoing``` ne retourne pas un successeur mais un itérateur sur les successeurs de ce nœud. @bib:nodify
 
 ```rust Node``` fonctionne de pair avec ```rust Process``` qui, quant à lui, traduit les opérations supportées pour un algorithme donné.
-À l'heure actuelle, il existe trois opérations différentes, qui sont implémentés par un @trait :
+À l'heure actuelle, il existe trois opérations différentes, qui sont implémentées par un @trait :
 - ```rust Contains``` qui permet de savoir si un graphe contient un nœud vérifiant un prédicat donné ;
 - ```rust FindAny``` qui permet d'obtenir un nœud vérifiant un prédicat ;
 - ```rust FindFirst``` qui permet d'obtenir le premier nœud vérifiant un prédicat#footnote[Pour un graphe pondéré seulement, il s'agit du plus court chemin.]. @bib:nodify @bib:nodify-repo
@@ -1436,7 +1436,7 @@ Ainsi, la @turbofish, avec l'ajout de deux `:`, permet de lever cette ambiguït�
 
 On implémente une structure nœud représentant la valeur courante de la @fibonacci et qui sauvegarde également la valeur précédente afin d'être capable de générer la suivante.
 
-Comme on peut le voir dans l'implémentation de ```rust Node::outgoing```, l'implémentation est très simple car le nombre de successeur est unitaire.
+Comme on peut le voir dans l'implémentation de ```rust Node::outgoing```, l'implémentation est très simple car le nombre de successeurs est unitaire.
 
 À @ref:nodify-example:33, le résultat est calculé de la manière suivante :
 + à @ref:nodify-example:to-process on convertit le nœud en ```rust Process``` grâce à ```rust Node::to_process``` ;
@@ -1492,13 +1492,13 @@ En réalité, l'implémentation précédente s'est révélée assez peu pratique
 + l'outillage autour de la gestion de graphe est entièrement à la charge de @nodify.
 
 Pour cette raison, il a été décidé de fournir une autre implémentation, reposant cette fois-ci sur une @api déjà existante : il s'agit de la @crate @petgraph.
-@petgraph est une @crate, très connu dans le monde de Rust, qui fournit un ensemble d'outils de gestion, de recherche et de travaux divers sur des graphes.
+@petgraph est une @crate, très connue dans le monde de Rust, qui fournit un ensemble d'outils de gestion, de recherche et de travaux divers sur des graphes.
 
 Les algorithmes de @nodify ont donc été retraduits comme une simple extension des algorithmes déjà existants dans la @crate.
 
 On peut remarquer les nombreuses similitudes entre @ref:delta_stepping-signature et @ref:dijkstra-signature : les deux signatures sont identiques à l'exception
 - du fait que ```rust delta_stepping``` préfère un prédicat plutôt qu'une cible,
-- que celui-ci ne retourne que les nœud les plus proches avec leur distance,
+- que celui-ci ne retourne que les nœuds les plus proches avec leur distance,
 - et qu'il nécessite un paramètre suplémentaire (```rust delta```)
 - ainsi que des contraintes en concurrence sur ses paramètres génériques.
 
@@ -1575,7 +1575,7 @@ Le couple $(w, x)$ avec $w in V$ et $x$ sa potentielle nouvelle distance est app
   caption: [Implémentation de $op("relax")$],
 ) <ref:delta-stepping-algorithm:relax>
 
-@ref:delta-stepping-algorithm:relax implémente un mécanisme #emph[relaxation] : si la distance donnée est meilleure que la distance courante, alors la première est sélectionné. @bib:delta-stepping
+@ref:delta-stepping-algorithm:relax implémente un mécanisme #emph[relaxation] : si la distance donnée est meilleure que la distance courante, alors la première est sélectionnée. @bib:delta-stepping
 
 On remarque également que le sommet relaxé est supprimé de son #emph[seau] pour être mis dans celui qui correspond à sa nouvelle distance#footnote[Il s'agit potentiellement du même.]. @bib:delta-stepping
 
@@ -1621,15 +1621,15 @@ On s'intéressera d'abord aux aspects techniques, puis je terminerai par un bila
 
 == Conclusion technique
 
-Au travers de la @ref:results, il a été possible d'établir que les performances d'un algorithme diffère grandement d'une configuration à une autre.
+Au travers de la @ref:results, il a été possible d'établir que les performances d'un algorithme diffèrent grandement d'une configuration à une autre.
 
-Il a été possible de montrer que les algorithmes parallèles faisait apparaître certains goulets d'étranglement, notamment dû aux synchronisme en mémoire afin de gérer les écritures concurrentes et éviter ainsi les @data-race:pl.
+Il a été possible de montrer que les algorithmes parallèles faisaient apparaître certains goulets d'étranglement, notamment dûs aux synchronisme en mémoire afin de gérer les écritures concurrentes et éviter ainsi les @data-race:pl.
 
-En particulier, on n'a pas pu établir un algorithme parallèle qui performait mieux que son équivalent séquentiel pour la configuration en @ref:dense-graph : en effet, dans ce cas précis, les écritures concurrentes sont si fréquente que le synchronisme en mémoire induit un très fort ralentissement.
+En particulier, on n'a pas pu établir un algorithme parallèle qui performait mieux que son équivalent séquentiel pour la configuration en @ref:dense-graph : en effet, dans ce cas précis, les écritures concurrentes sont si fréquentes que le synchronisme en mémoire induit un très fort ralentissement.
 
-Ces coûts sont décuplés par l'algorithme de parcours en profondeur parallèle du fait que la boucle parallèle est imbriqué dans une boucle séquentielle : les surcoûts liés à la programmation parallèle s'ajoutent donc.
+Ces coûts sont décuplés par l'algorithme de parcours en profondeur parallèle du fait que la boucle parallèle est imbriquée dans une boucle séquentielle : les surcoûts liés à la programmation parallèle s'ajoutent donc.
 
-A contrario, l'algorithme par itérateur parallèle fonctionne par une division du travail en sous-tâches qui est fixée avant l'exéction : les surcoûts apparaissent donc moins mais le travail à effectué est moins et moins bien divisé : le travail, étant divisée qu'une seule fois, ne peut pas bien géré des cas où les tâches sont inégales.
+A contrario, l'algorithme par itérateur parallèle fonctionne par une division du travail en sous-tâches qui est fixée avant l'exécution : les surcoûts apparaissent donc moins mais le travail à effectué est moins bien divisé : le travail, étant divisé qu'une seule fois, ne peut pas bien gérer des cas où les tâches sont inégales.
 
 De cette façon, il a été possible d'établir des algorithmes de recherche d'existence de chemin séquentiels et parallèles mais dont les performances sont variables en fonction du contexte ; le choix revient donc à l'utilisateur de préférer une solution séquentielle ou parallèle.
 
@@ -1641,17 +1641,17 @@ De manière générale, il a été possible d'établir une interface générique
 
 Au-delà des aspects techniques, ce stage a été l'occasion de découvrir le monde de la recherche académique.
 
-J'ai notamment eu l'occasion d'échanger avec des personnes de mon âge travaillant au @lig dont les domaines était assez variés.
-Certains avaient déjà une certaine expérience du Rust, ce qui m'a permis de progresser plus rapidements que je ne l'aurais pu seul.
+J'ai notamment eu l'occasion d'échanger avec des personnes de mon âge travaillant au @lig dont les domaines étaient assez variés.
+Certains avaient déjà une certaine expérience du Rust, ce qui m'a permis de progresser plus rapidement que je ne l'aurais pu seul.
 
 J'ai pu apprendre en discutant avec chacun ce qu'il faisait au sein du @lig, ce qui m'a permis d'en apprendre plus sur le fonctionnement de cet établissement.
 En particulier, j'ai découvert que certains ne travaillaient pas en tant que chercheurs mais en tant qu'ingénieurs : en effet, certains outils ont besoin d'être développés ou maintenus pour que des équipes puissent les utiliser dans leur travaux.
 
-Enfin, j'ai pu jetter un rapide coup d'œil à l'infrastructure informatique du laboratoire qui est un des rares centres de calcul de France.
+Enfin, j'ai pu jeter un rapide coup d'œil à l'infrastructure informatique du laboratoire qui est un des rares centres de calcul de France.
 
 #heading(numbering: none)[Remerciements]
 
-Je remercie, tout d'abord, M. F. Wagner pour m'avoir accepté en temps que stagiaire au sein de l'équipe @datamove, ainsi que pour son aimable aide tout au long de mon séjour au @lig.
+Je remercie, tout d'abord, M. F. Wagner pour m'avoir accepté en tant que stagiaire au sein de l'équipe @datamove, ainsi que pour son aimable aide tout au long de mon séjour au @lig.
 
 Je tiens également à féliciter mes collègues qui ont pu occasionnellement m'aider au cours de ce stage : en particulier, je salue M. P. Kailer et M. V. Trophime pour leur assistance en Rust.
 

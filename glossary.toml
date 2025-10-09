@@ -21,7 +21,7 @@ description = "Un sous-programme, partie intégrante du compilateur Rust, qui as
 [capture]
 short = "capture"
 group = "Rust"
-description = "Phénomène permettant d'utiliser une variable définit à l'extérieur du corps d'une @closure."
+description = "Phénomène permettant d'utiliser une variable définie à l'extérieur du corps d'une @closure."
 
 [closure]
 short = "closure"
@@ -74,7 +74,7 @@ description = "Technique algorithmique consistant à diviser le travail à effec
 
 [fibonacci]
 short = "suite de Fibonacci"
-description = "Un suite de nombre entiers tirant son nom du mathématicien italien Fibonacci."
+description = "Un suite de nombres entiers tirant son nom du mathématicien italien Fibonacci."
 
 [flamegraph]
 short = "flamegraph"
@@ -117,7 +117,7 @@ description = "Une petite @crate fournissant des utilitaires pour explorer des g
 
 [lazy]
 short = "paresseux"
-description = "Terme qualifiant une expression dont l'évaluation est retardé jusqu'au moment où le résultat de ladite expression est nécessaire."
+description = "Terme qualifiant une expression dont l'évaluation est retardée jusqu'au moment où le résultat de ladite expression est nécessaire."
 
 [petgraph]
 short = "Petgraph"
@@ -127,12 +127,12 @@ description = "Une bibilothèque, très connue de l'écosystème Rust, permettan
 [rayon]
 short = "Rayon"
 group = "Rust"
-description = "Une bibliothèque de parallélisme de donnée pour Rust."
+description = "Une bibliothèque de parallélisme de données pour Rust."
 
 [shard]
 short = "shard"
 group = "Rust"
-description = "Pour @dashmap, il s'agit d'un fragment de l'espace de clef."
+description = "Pour @dashmap, il s'agit d'un fragment de l'espace de clefs."
 
 [sssp]
 short = "SSSP"
