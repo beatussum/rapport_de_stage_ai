@@ -1593,7 +1593,7 @@ En particulier, j'ai découvert que certains ne travaillaient pas en tant que ch
 
 Enfin, j'ai pu jetter un rapide coup d'œil à l'infrastructure informatique du laboratoire qui est un des rares centres de calcul de France.
 
-= Remerciements
+#heading(numbering: none)[Remerciements]
 
 Je remercie, tout d'abord, M. F. Wagner pour m'avoir accepté en temps que stagiaire au sein de l'équipe @datamove, ainsi que pour son aimable aide tout au long de mon séjour au @lig.
 
