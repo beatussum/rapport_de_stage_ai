@@ -1,4 +1,4 @@
-#import "@preview/bei-report:0.1.1": ensimag
+#import "@preview/bei-report:0.1.2": ensimag
 
 #import "@preview/codly:1.3.0": codly, codly-init, no-codly
 #import "@preview/codly-languages:0.1.8": codly-languages
@@ -74,8 +74,6 @@
   bibliography: bibliography("refs.bib"),
   figure-supplement: [Fig.],
 )
-
-#outline(depth: 3)
 
 = Avant-propos
 
