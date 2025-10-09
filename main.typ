@@ -1655,6 +1655,13 @@ Je remercie, tout d'abord, M. F. Wagner pour m'avoir accepté en tant que stagia
 
 Je tiens également à féliciter mes collègues qui ont pu occasionnellement m'aider au cours de ce stage : en particulier, je salue M. P. Kailer et M. V. Trophime pour leur assistance en Rust.
 
+#heading(numbering: none)[Note sur la mise en page]
+
+Si certaines colonnes semblent inutilement vides, cela est principalement dû au fait que Typst ne supporte pas les figures flottantes dans les colonnes.
+Par conséquent, je n'ai pas pu marquer un certain nombre de figures comme flottantes : elles ne sont donc pas placées de manière très efficaces.
+
+Il s'agit d'un bogue que j'ai remonté#footnote[#link("https://github.com/typst/typst/issues/6948")].
+
 #let theme = (
   ..theme-compact,
   section: (title, body) => {
