@@ -1274,9 +1274,7 @@ Une configuration tel que dans @ref:dense-graph correspond à une situation où 
 
 @ref:bench:dense:par-iter montre que l'entrée du @benchmark est résolu en #qty("40,350", "us") avec un écart-type de #qty("2,0626", "us").
 
-On remarque donc que le DFS parallèle est sensiblement meilleur, de l'ordre de #qty("30", "percent"), que la solution utilisant ```rust walk_tree```.
-
-Dans ce cas, on remarque donc que le DFS parallèle est bien plus mauvais, de l'ordre de #qty("3000", "percent"), que la solution utilisant ```rust walk_tree```.
+Pour @ref:bench:dense, on remarque que le DFS parallèle est bien plus mauvais, de l'ordre de #qty("3000", "percent"), que la solution utilisant ```rust walk_tree```.
 
 == Analyse
 
