@@ -1235,6 +1235,8 @@ Au cours des lignes suivantes, on étudiera deux configurations précises :
 #figure(
   image("benches/par_dfs/split.svg"),
   caption: [@benchmark:cap du DFS parallèle],
+  placement: top,
+  scope: "parent",
 ) <ref:bench:split:par-dfs>
 
 @ref:bench:split:par-dfs montre que l'entrée du @benchmark est résolu, en moyenne, en #qty("1,6142", "ms") avec un écart-type de #qty("63,048", "us").
@@ -1242,6 +1244,8 @@ Au cours des lignes suivantes, on étudiera deux configurations précises :
 #figure(
   image("benches/par_iter/split.svg"),
   caption: [@benchmark:cap de l'algorithme à itérateur parallèle],
+  placement: top,
+  scope: "parent",
 ) <ref:bench:split:par-iter>
 
 @ref:bench:split:par-iter montre que l'entrée du @benchmark est résolu, en moyenne, en #qty("2,2990", "ms") avec un écart-type de #qty("20,181", "us").
@@ -1255,6 +1259,8 @@ Une configuration tel que dans @ref:dense-graph correspond à une situation où 
 #figure(
   image("benches/par_dfs/dense.svg"),
   caption: [@benchmark:cap du DFS parallèle],
+  placement: top,
+  scope: "parent",
 ) <ref:bench:dense:par-dfs>
 
 @ref:bench:dense:par-dfs montre que l'entrée du @benchmark est résolu, en moyenne, en #qty("1,2555", "ms") avec un écart-type de #qty("66,830", "us").
@@ -1262,6 +1268,8 @@ Une configuration tel que dans @ref:dense-graph correspond à une situation où 
 #figure(
   image("benches/par_iter/dense.svg"),
   caption: [@benchmark:cap de l'algorithme à itérateur parallèle],
+  placement: top,
+  scope: "parent",
 ) <ref:bench:dense:par-iter>
 
 @ref:bench:dense:par-iter montre que l'entrée du @benchmark est résolu en #qty("40,350", "us") avec un écart-type de #qty("2,0626", "us").
