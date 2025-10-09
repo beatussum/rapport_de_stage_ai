@@ -12,7 +12,6 @@
 #show: init-glossary.with(toml("glossary.toml"), show-term: emph)
 
 #show figure.where(kind: raw): fig => {
-  show raw.where(block: true, lang: "dot"): it => no-codly(raw-render(it))
   set text(size: .798em)
   fig
 }
@@ -359,18 +358,20 @@ En interne deux fonctions ont une importance capitale :
 == Algorithmes de graphe
 
 #figure(
-  ```dot
-  digraph {
-    a -> b [label = 1]
-    a -> c [label = 10]
-    b -> e [label = 4]
-    c -> d [dir = both label = 2]
-    c -> e [label = 3]
-    d -> f [label = 5]
-    e -> f [label = 20]
-    e -> d [label = 6]
-  }
-  ```,
+  raw-render(
+    ```dot
+    digraph {
+      a -> b [label = 1]
+      a -> c [label = 10]
+      b -> e [label = 4]
+      c -> d [dir = both label = 2]
+      c -> e [label = 3]
+      d -> f [label = 5]
+      e -> f [label = 20]
+      e -> d [label = 6]
+    }
+    ```
+  ),
 
   caption: [Exemple de graphe],
 ) <ref:graph>
@@ -1168,55 +1169,59 @@ On applique ensuite ```rust Option::is_some``` afin de vérifier s'il existe un 
 = Analyse des résultats <ref:results>
 
 #figure(
-  ```dot
-  digraph {
-    a -> b
-    b -> c
-    c -> d
+  raw-render(
+    ```dot
+    digraph {
+      a -> b
+      b -> c
+      c -> d
 
-    subgraph {
-      node [style=filled];
+      subgraph {
+        node [style=filled];
 
-      d -> e
-      e -> f
-      e -> g
-      e -> h
-      g -> f
-      g -> h
-      h -> f
+        d -> e
+        e -> f
+        e -> g
+        e -> h
+        g -> f
+        g -> h
+        h -> f
+      }
+
+      subgraph {
+        node [style=filled];
+
+        d -> "e'"
+        "e'" -> "f'"
+        "e'" -> "g'"
+        "e'" -> "h'"
+        "g'" -> "f'"
+        "g'" -> "h'"
+        "h'" -> "f'"
+      }
     }
-
-    subgraph {
-      node [style=filled];
-
-      d -> "e'"
-      "e'" -> "f'"
-      "e'" -> "g'"
-      "e'" -> "h'"
-      "g'" -> "f'"
-      "g'" -> "h'"
-      "h'" -> "f'"
-    }
-  }
-  ```,
+    ```
+  ),
 
   caption: [Configuration avec composantes connexes],
 ) <ref:split-graph>
 
 #figure(
-  ```dot
-  digraph {
-    a -> b
-    a -> c
-    a -> d
-    b -> c
-    b -> d
-    b -> e
-    c -> d
-    c -> e
-    d -> e
-  }
-  ```,
+  raw-render(
+    ```dot
+    digraph {
+      a -> b
+      a -> c
+      a -> d
+      b -> c
+      b -> d
+      b -> e
+      c -> d
+      c -> e
+      d -> e
+    }
+    ```
+  ),
 
   caption: [Configuration avec graphe dense],
 ) <ref:dense-graph>
