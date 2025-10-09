@@ -104,7 +104,7 @@ description = "Par convention, il s'agit d'un @trait dont le corps est vide et d
 [memoization]
 short = "mémoïsation"
 group = "Généralités sur la concurrence"
-description = "Il s'agit d'une mise en cache des valeurs de retour d'une fonction donnée afin d'éviter plusieurs évaluations pour des arguments identiques."
+description = "Une mise en cache des valeurs de retour d'une fonction donnée afin d'éviter plusieurs évaluations pour des arguments identiques."
 
 [moore]
 short = "lois de Moore"
@@ -132,7 +132,7 @@ description = "Une bibliothèque de parallélisme de données pour Rust."
 [shard]
 short = "shard"
 group = "Rust"
-description = "Pour @dashmap, il s'agit d'un fragment de l'espace de clefs."
+description = "Pour @dashmap, un fragment de l'espace de clefs."
 
 [sssp]
 short = "SSSP"
@@ -142,7 +142,7 @@ description = "Le plus court chemin depuis un sommet donné."
 [technical-interview]
 short = "entrevue technique"
 plural = "entrevues techniques"
-description = "Il s'agit d'une entrevue, la plupart du temps lors d'un entretient d'embauche, visant à déterminer les compétences techniques d'un candidat à l'aide de questions et problèmes techniques."
+description = "Une entrevue, la plupart du temps lors d'un entretient d'embauche, visant à déterminer les compétences techniques d'un candidat à l'aide de questions et problèmes techniques."
 
 [thread]
 short = "fil"
@@ -152,7 +152,7 @@ description = "Un fil (ou #emph[thread] en anglais) est la plus petite successio
 [trait]
 short = "trait"
 group = "Rust"
-description = "Il s'agit d'une entité permettant de définir un ensemble de fonctionnalités qu'un type possède et a en commun avec d'autres."
+description = "Une entité permettant de définir un ensemble de fonctionnalités qu'un type possède et a en commun avec d'autres."
 
 [turbofish]
 short = "notation Turbofish"
@@ -172,4 +172,4 @@ description = "Le vol de travail est une méthode d'ordonnancement où chaque pr
 
 [wrapper-function]
 short = "fonction wrapper"
-description = "Il s'agit d'une fonction dont le rôle principale est d'en appeler une autre."
+description = "Une fonction dont le rôle principale est d'en appeler une autre."
