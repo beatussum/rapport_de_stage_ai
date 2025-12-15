@@ -53,7 +53,7 @@ jobs:
         run: just compile
 
       - name: Archive compiled report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         if: matrix.just-version == null && matrix.typst-version == null
         with:
           name: report
